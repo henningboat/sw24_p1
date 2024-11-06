@@ -2,3 +2,11 @@ Rather cum in the sink
 than sink the cum
 
 -King Julien
+
+#include <stdio.h>
+
+int main(void){
+printf("yallah")
+
+return 0;
+}
