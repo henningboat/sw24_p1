@@ -5,6 +5,7 @@ int main(void) {
 
     int i = 10;
 
+    printf("enter a number:\n");
     scanf("%f", &i);
 
     int y = 10*5;
