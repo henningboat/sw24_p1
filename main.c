@@ -6,9 +6,11 @@ int main(void) {
     int i = 10;
 
     printf("enter a number:\n");
-    scanf("%f", &i);
+    scanf("%d", &i);
+    printf("%d\n",i);
 
     int y = 10*5;
+    printf("%d\n",i);
 
     return 0;
 }
