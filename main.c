@@ -1,16 +1,55 @@
 #include <stdio.h>
+#include <math.h>
 
+#define MAX_SPEED 180
+#define TIME_FACTOR 60
 int main(void) {
     printf("Hello, World!\n");
 
-    int i = 10;
-
-    printf("enter a number:\n");
-    scanf("%d", &i);
-    printf("%d\n",i);
-
-    int y = 10*5;
-    printf("%d\n",i);
 
     return 0;
+}
+
+/*Variable distance
+    *calculate funktion
+    *tid, længde, acceleration, hastighed
+ *Variable punkt
+ */
+
+void distance(char a, char b, double *distance ) {
+
+    if(a == 'a' && b == 'b') {
+        *distance = 30;
+    }else if(a == 'b' && b=='c') {
+        *distance = 20;
+    }
+
+}
+
+
+void time(double dist, double speed, double *time) {
+
+    double dist_a;
+    double time_a;
+
+    time_a = (dist_a / MAX_SPEED) * 60;
+
+    for() {
+
+    }
+}
+
+void sfsf() {
+    double totalTime;
+
+    String cityName;
+    String cityName2;
+
+    for{
+        if() {
+
+            time()
+        }
+    }
+
 }
