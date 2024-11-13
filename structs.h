@@ -8,4 +8,15 @@ typedef struct {
     double deceleration;
 }Train;
 
+typedef struct
+{
+char* name;
+}Station;
+
+typedef struct
+{
+
+}Connection;
+
+
 #endif

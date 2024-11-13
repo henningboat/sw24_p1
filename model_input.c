@@ -1,7 +1,11 @@
 #include "structs.h"
+#include "model_input.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX_STR_LEN 100
+#define MAX_STR_LEN 10000
+
+void string_convert(char* text, char** sub_str);
+
 
 int test_model_input(void) {
 
@@ -21,6 +25,10 @@ int test_model_input(void) {
 
         printf("Read from file: %s\n", str);
 
+        Train data = read_train(str);
+
+        print_train(data);
+
         fclose(input_file_pointer);
     }
     else{
@@ -29,4 +37,47 @@ int test_model_input(void) {
     }
 
     return 0;
+}
+
+void string_convert(char* text, char** sub_str)
+{
+    int i = 0;
+    sub_str[0] = text;
+    int sub_str_index = 1;
+
+    while (1)
+    {
+        if (text[i] == '\0')
+        {
+            break;
+        }
+        if (text[i] == ';')
+        {
+            text[i] = '\0';
+
+            sub_str[sub_str_index] = text + i + 1;
+            sub_str_index++;
+        }
+        i++;
+    }
+}
+
+Train read_train(char* str)
+{
+    char* sub_str[100];
+    string_convert(str, sub_str);
+    Train train;
+    train.name=(sub_str[0]);
+    train.max_speed=atof(sub_str[1]);
+    train.acceleration=atof(sub_str[2]);
+    train.deceleration=atof(sub_str[3]);
+
+
+    return train;
+}
+
+void print_train(Train train)
+{
+    printf("the trains name: %s\n and the trains max speed: %f\n and the trains acceleration: %f\n and the trains deceleration: %f\n",
+        train.name, train.max_speed, train.acceleration, train.deceleration);
 }
