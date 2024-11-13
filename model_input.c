@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #define MAX_STR_LEN 10000
 
-void string_convert(char* text, char** sub_str);
+void string_convert(char* text, char** sub_str, char a);
 
 
 int test_model_input(void) {
@@ -39,7 +39,7 @@ int test_model_input(void) {
     return 0;
 }
 
-void string_convert(char* text, char** sub_str)
+void string_convert(char* text, char** sub_str, char a)
 {
     int i = 0;
     sub_str[0] = text;
@@ -51,7 +51,7 @@ void string_convert(char* text, char** sub_str)
         {
             break;
         }
-        if (text[i] == ';')
+        if (text[i] == a)
         {
             text[i] = '\0';
 
@@ -65,7 +65,7 @@ void string_convert(char* text, char** sub_str)
 Train read_train(char* str)
 {
     char* sub_str[100];
-    string_convert(str, sub_str);
+    string_convert(str, sub_str,';');
     Train train;
     train.name=(sub_str[0]);
     train.max_speed=atof(sub_str[1]);
