@@ -8,8 +8,7 @@ typedef struct {
     double deceleration;
 }Train;
 
-typedef struct
-{
+typedef struct {
 char* name;
 }Station;
 

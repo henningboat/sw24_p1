@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #define MAX_STR_LEN 10000
 
-void string_convert(char* text, char** sub_str, char a);
+void string_split(char* text, char** sub_str, char a);
 
 
 int test_model_input(void) {
@@ -25,9 +25,25 @@ int test_model_input(void) {
 
         printf("Read from file: %s\n", str);
 
-        Train data = read_train(str);
+        char* sub_str[1000];
+        Train trains[1000];
+        int i=0;
 
-        print_train(data);
+        string_split(str,sub_str,'\n');
+
+        while (1)
+        {
+            trains[i] = read_train(sub_str[i]);
+            i++;
+            if(sub_str[i]==NULL)
+            {
+                break;
+            }
+        }
+
+        print_train(trains[0]);
+        printf("\n");
+        print_train(trains[1]);
 
         fclose(input_file_pointer);
     }
@@ -39,7 +55,7 @@ int test_model_input(void) {
     return 0;
 }
 
-void string_convert(char* text, char** sub_str, char a)
+void string_split(char* text, char** sub_str, char a)
 {
     int i = 0;
     sub_str[0] = text;
@@ -65,7 +81,7 @@ void string_convert(char* text, char** sub_str, char a)
 Train read_train(char* str)
 {
     char* sub_str[100];
-    string_convert(str, sub_str,';');
+    string_split(str, sub_str,';');
     Train train;
     train.name=(sub_str[0]);
     train.max_speed=atof(sub_str[1]);
