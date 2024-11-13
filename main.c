@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include "structs.h"
+#include "model_input.h"
 
 int main(void) {
-    printf("Hello, P1!\n");
+    test_model_input();
     return 0;
 }
