@@ -54,7 +54,7 @@ void find_neighbours(route* first_route, route route_list [], route open_set[], 
            ||(potential_route.a != closed_set[i].a && potential_route.b != closed_set[i].b)){
 
 
-            //kalde compare open_set()nnn
+            //kalde compare open_set()
             open_set[k] = potential_route;
             k++;
             closed_set[j] = *first_route;
