@@ -2,7 +2,7 @@
 #include <math.h>
 
 
-
+/****************DEFINED CONSTANTS***************/
 #define MAX_SPEED_1 180.0 // km/t
 #define MAX_SPEED_2 200.0 // km/t
 #define TIME_FACTOR 60.0  // omregner til minut
@@ -14,24 +14,31 @@
 #define PAD_SCHL_D  47.0
 #define SCHL_HAM_D  130.0
 
-struct route_time {
+#define ACCELERATION pow(1.2,2)
+/*************************************************/
+
+
+//*********************STRUCTS********************/
+
+typedef struct  {
     char route[NAME_LENGTH + 1];
     double time;
-};
-typedef struct route_time route_time;
+}route_time;
 
-double time_speed_1(double dist, double speed, double time_factor);
-double time_speed_2(double dist, double speed, double time_factor);
+/*************************************************/
+
+
+/*****************PROTOTYPES**********************/
+
+double get_travel_time(double dist, double speed, double time_factor);
+double convertKMHtoMS(double kmh);
+
+/*************************************************/
+
 
 int main(void) {
-    double time_arr[5];
-    for(int i = 0; i < 6; i++) {
+    printf("Minutter fra KBH til RING ved 180km/t %lf minutter\n", get_travel_time(KBH_RING_D, MAX_SPEED_1, TIME_FACTOR));
 
-    }
-    //time_speed_1(KBH_RING_D, MAX_SPEED_1);
-    printf("Minutter fra KBH til RING ved 180km/t %lf minutter\n", time_speed_1(KBH_RING_D, MAX_SPEED_1, TIME_FACTOR));
-    //time_speed_2(KBH_RING_D, MAX_SPEED_1, &time);
-    printf("\nMinutter fra KBH til RING ved 200km/t %lf minutter\n", time_speed_2(KBH_RING_D, MAX_SPEED_1, TIME_FACTOR));
     return 0;
 }
 
@@ -41,39 +48,41 @@ int main(void) {
     *tid, længde, acceleration, hastighed
 */
 
-void distance(char a, char b, double *distance ) {
 
-    if(a == 'a' && b == 'b') {
-        *distance = 30;
-    }else if(a == 'b' && b=='c') {
-        *distance = 20;
-    }
-}
-
-double time_speed_1(double dist, double speed, double time_factor) {
+double get_travel_time(double dist, double speed, double time_factor) {
+    // (distance / start hast) + (distance / max hastighed) + (distance / sluthastighed)
 
     double time = (KBH_RING_D / MAX_SPEED_1) * TIME_FACTOR;
     return time;
 }
 
-double time_speed_2(double dist, double speed, double time_factor) {
-    double time = (KBH_RING_D / MAX_SPEED_2) * TIME_FACTOR;
-    return time;
+double placeholderFunction( double distance, double start_speed,
+                            double max_speed, double end_speed,
+                            double acceleration, double deceleration) {
+
+    //convert km/h to m/s
+    double m_per_s=convertKMHtoMS(max_speed);
+
+    //return the time
+    return m_per_s/acceleration;
+
+    /*
+     *if toget ikke kan nå top speed indenfor strækket
+     *så en linjestykke om det
+     *
+     *else regn accerelation og deceleration af toget
+     *
+     *tilføj tiden det tager til travel_time variablen
+     *returnere det
+     */
+
+}
+
+double convertKMHtoMS(double kmh) {
+    return kmh*1000/3600;
 }
 
 
 
-/*void sfsf() {
-    double totalTime;
 
-    //String cityName;
-    //String cityName2;
 
-    for{
-        if() {
-
-            time()
-        }
-    }
-
-}*/
