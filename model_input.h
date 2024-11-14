@@ -1,3 +1,7 @@
-int test_model_input(void);
-Train read_train(char* str);
-void print_train(Train train);
+#ifndef MODEL_DATA_H
+#define MODEL_DATA_H
+
+#include "structs.h"
+ModelData get_model_data(void);
+
+#endif

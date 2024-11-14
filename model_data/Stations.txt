@@ -1,1 +1,4 @@
-Hamborg;Ringsted;Koege;Koebenhavn;
+Hamborg
+Ringsted
+Koege
+Koebenhavn
