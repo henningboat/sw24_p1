@@ -5,7 +5,9 @@ set(CMAKE_C_STANDARD 11)
 
  add_executable(p1 main.c structs.h
          model_input.c
-         model_input.h)
+         model_input.h
+         path_finding.c
+         path_finding.h)
 
 add_custom_target(copy_model_data ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
