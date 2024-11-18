@@ -4,7 +4,7 @@
 
 /****************DEFINED CONSTANTS***************/
 
-#define MAX_SPEED_1 180.0 // km/t
+#define MAX_SPEED_1 50    //180.0 km/t = 50m/s
 #define MAX_SPEED_2 200.0 // km/t
 
 #define TIME_FACTOR 60.0  // omregner til minut
@@ -37,7 +37,6 @@ typedef struct  {
 /*****************PROTOTYPES**********************/
 
 double get_travel_time(double dist, double speed, double acceleration,double deceleration);
-double convertKMHtoMS(double kmh);
 double acceleration_time_calculator(double start_and_end_speed,double max_speed,double acceleration);
 double acceleration_distance_calculator(double time ,double acceleration);
 /*-----------------------------------------------*/
@@ -46,20 +45,16 @@ double acceleration_distance_calculator(double time ,double acceleration);
 int main(void) {
 
     /*TODO
-     *air force/drag
-     *power drag i.e rails and friction
-     *Station stop
-     *make a function that can turn minutes into  | hours | minutes | format
-     *Emission
+     *Station Stops
+     *Emissions
      */
 
-    printf("Minutter fra KBH til RING ved 180km/t %2.2lf minutter og afstanden %2.0lfkm \n",
-            get_travel_time(KBH_RING_D, MAX_SPEED_1,ACCELERATION,DECELERATION), KBH_RING_D);
 
+    printf("Minutter fra KBH til RING ved 50m/s %0.2lf secs og afstanden %2.0lfkm \n",
+            get_travel_time(KBH_RING_D, MAX_SPEED_1,ACCELERATION,DECELERATION), KBH_RING_D);
     return 0;
 }
 
-// There will be a struct here instead of dist, speed leration
 double get_travel_time(double dist, double speed, double acceleration,double deceleration) {
 
     double acceleration_time = acceleration_time_calculator(0,speed,acceleration);
@@ -69,8 +64,7 @@ double get_travel_time(double dist, double speed, double acceleration,double dec
     double dc_distance = acceleration_distance_calculator(acceleration_time, acceleration);
 
     dist = dist-ac_distance-dc_distance;//To find the time taken, we need to factor in ac- and deceleration time
-    double time = (dist / speed) * TIME_FACTOR+acceleration_time+deceleration_time; // constant time removed and added ac and dc time
-
+    double time = (dist / speed) * acceleration_time+deceleration_time;
 
     return time;
 }
@@ -82,19 +76,13 @@ double acceleration_distance_calculator(double time ,double acceleration) {
 
 
 double acceleration_time_calculator(double start_and_end_speed,double max_speed,double acceleration){
-    double m_per_s=convertKMHtoMS(max_speed); //convert km/h to m/s
 
-    double acceleration_time = (m_per_s - start_and_end_speed )/ acceleration;
+    double acceleration_time = (start_and_end_speed -max_speed)/ acceleration;
 
-    return acceleration_time/60;
-
-}
-
-double convertKMHtoMS(double kmh) {
-
-    return kmh*1000/3600;
+    return acceleration_time;
 
 }
+
 
 
 
