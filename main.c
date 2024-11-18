@@ -18,8 +18,8 @@
 #define PAD_SCHL_D  47.0
 #define SCHL_HAM_D  130.0
 
-#define ACCELERATION 1.2 //1.2
-#define DECELERATION 1.0 //1.1
+#define ACCELERATION 0.5 //1.2
+#define DECELERATION 0.4 //1.1
 
 /*-----------------------------------------------*/
 
