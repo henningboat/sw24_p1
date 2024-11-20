@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-
+#include "travel_time.h"
 
 /****************DEFINED CONSTANTS***************/
 
@@ -34,33 +34,13 @@ typedef struct {
 } route_time;
 
 /*-----------------------------------------------*/
-
-
-/*****************PROTOTYPES**********************/
-
-double get_travel_time(double dist, double cruise_speed, double acceleration, double deceleration, double start_speed,
-                       double end_speed);
-
 double acceleration_time_calculator(double start_or_end_speed, double cruise_speed, double acceleration);
 
 double acceleration_distance_calculator(double time, double acceleration);
 
-/*-----------------------------------------------*/
-
-
-int main(void) {
-    /*TODO
-     *Station Stops
-     *Emissions
-     */
 
 
 
-    printf("Minutter fra KBH til RING ved 50m/s %0.2lf secs og afstanden %d m \n",
-           get_travel_time(KBH_RING_D, MAX_SPEED_1,ACCELERATION,
-                           DECELERATION,START_SPEED,END_SPEED), KBH_RING_D);
-    return 0;
-}
 
 double get_travel_time(double dist, double cruise_speed, double acceleration,
                        double deceleration, double start_speed, double end_speed) {
