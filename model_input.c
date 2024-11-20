@@ -118,16 +118,19 @@ void read_connections(Connection* connections, int* num_connections, Station* st
 
     while (fscanf(file, "%[^;];%[^;];%lf;%lf\n",from_station, to_station, &track_length, &max_speed)==4)
     {
+        int found_start = 0, found_stop = 0;
         for (int j = 0; j < num_stations; j++)
         {
             if (strcmp(from_station, stations[j].name) == 0)
             {    connections->station_a_index= j;
                 printf("station %s is equal to index number %d\n", stations[j].name, j);
+                found_start=1;
             }
 
             if (strcmp(to_station, stations[j].name) == 0)
             {   connections->station_b_index = j;
                 printf("station %s is equal to index number %d\n", stations[j].name, j);
+                found_stop=1;
             }
 
         }
@@ -135,9 +138,18 @@ void read_connections(Connection* connections, int* num_connections, Station* st
         connections->distance=track_length;
         connections->max_speed=max_speed;
 
+        if(!found_start) {
+            printf("Could not find start station %s when reading connection. Make sure the station is present in stations.txt.", from_station);
+            exit(EXIT_FAILURE);
+        }
+        if(!found_stop) {
+            printf("Could not find end station %s when reading connection. Make sure the station is present in stations.txt.", to_station);
+            exit(EXIT_FAILURE);
+        }
 
         (*num_connections)++;
         connections++;
     }
+    fclose(file);
 
 }
