@@ -2,7 +2,7 @@ Copenhagen S;Koege;200;30.7
 Koege;Ringsted;200;26
 Ringsted;Slagelse;180;29
 Slagelse;Korsoer;180;15
-Korsør;Nyborg;180;23
+Korsoer;Nyborg;180;23
 Nyborg;Odense;180;29
 Odense;Middelfart;180;49.5
 Middelfart;Kolding;160;23
