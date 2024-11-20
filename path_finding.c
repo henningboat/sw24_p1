@@ -3,6 +3,7 @@
 
 #include "path_finding.h"
 #include <stdio.h>
+#include <math.h>
 
 #define length 7
 
@@ -14,15 +15,37 @@ struct route{
 
 typedef struct route route;
 
+struct station
+{
+    int station_id;
+    double distance;
+};
+
+typedef struct station station;
+
 void Dijkstra(){
     //Placeholder ruter (de rigtige skal hentes fra Henning/Joseph)
     route route_list[length] = {{1,2, 1},{2,3, 1},{0,1, 1},{5,6, 1},{3,4, 1},{6,7, 1},{4,5, 1}};
-    int start_station; //Kan også kaldes "source"
+    int start_station = 0; //Kan også kaldes "source"
     int end_station;
     //Array med de stationer vi skal tjekke
     int Q[length] = {1,1,1,1,1,1,1}; //Hvorfor har jeg sat alle vaerdier til 1?
-    double dist[];//set to infinity (eller MEGET hoejt tal)
+    double dist[100000];//set to infinity (eller MEGET hoejt tal)
     int prev[length];
+
+    //make it to a set. example:{0,0}
+    station unvisited[length];
+    unvisited[start_station].station_id = start_station;
+    unvisited[start_station].distance = 0;
+    for(int i = 0; i < length; i++)
+    {
+        if(i != start_station)
+        {
+            unvisited[i].station_id = i;
+            unvisited[i].distance = INFINITY;
+            printf("%d",i);
+        }
+    }
 }
 
 /*  function Dijkstra(Graph, source): //Source = start_station
