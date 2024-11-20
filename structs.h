@@ -25,11 +25,11 @@ typedef struct
 
 typedef struct
 {
-    Train* trains;
+    const Train* trains;
     int num_trains;
-    Station* stations;
+    const Station* stations;
     int num_stations;
-    Connection* connections;
+    const Connection* connections;
     int num_connections;
 }ModelData;
 
