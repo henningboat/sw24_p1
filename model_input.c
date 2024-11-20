@@ -25,18 +25,18 @@ ModelData get_model_data(void) {
         ModelData result;
 
         int num_trains;
-        Train* trains= malloc(10000);
+        Train* trains= malloc(100*sizeof(Train));
         read_trains(trains, &num_trains);
         result.trains = trains;
         result.num_trains = num_trains;
 
-        Station* stations = malloc(1000);
+        Station* stations = malloc(100*sizeof(Station));
         int num_stations;
         read_stations(stations, &num_stations);
         result.stations = stations;
         result.num_stations = num_stations;
 
-        Connection* connections = malloc(10000);
+        Connection* connections = malloc(100*sizeof(Connection));
         int num_connections;
         read_connections(connections, &num_connections, stations, num_stations);
         result.connections = connections;
