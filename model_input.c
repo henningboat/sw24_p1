@@ -80,7 +80,7 @@ void read_trains(Train* trains, int* num_trains) {
 void read_stations(Station* station, int* num_stations)
 {
     FILE *file;
-    file = fopen("model_data/Stations.txt", "r");
+    file = fopen("model_data/stations.txt", "r");
 
     if(file==NULL) {
         exit(EXIT_FAILURE);
