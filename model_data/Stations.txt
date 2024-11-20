@@ -1,4 +1,4 @@
-Hamborg
+Hamborg;
 Ringsted
 Koege
 Koebenhavn
