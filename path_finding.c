@@ -4,6 +4,7 @@
 #include "path_finding.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 #define length 7
 
@@ -23,90 +24,143 @@ struct station
 
 typedef struct station station;
 
-void Find_closest_station(station unvisited[], int *current_station, int end_station, int visited[]);
+void Find_closest_station(station stations[], int *current_station, int not_visited[]);
 
-void Find_neighbours(station unvisited[], int current_station, route route_list[], int visited[]);
+void Find_neighbours(station stations[], int current_station, route route_list[], int visited[]);
 
 void Dijkstra(){
     //Placeholder ruter (de rigtige skal hentes fra Henning/Joseph)
-    route route_list[length] = {{1,2, 1},{2,3, 1},{0,1, 1},{5,6, 1},{3,4, 1},{6,7, 1},{4,5, 1}};
+    route route_list[length] = {{1,2, 2},{2,3, 2},{0,1, 2},{5,6, 2},{3,4, 2},{6,7, 2},{4,5, 2}};
     int start_station = 0; //Kan også kaldes "source"
-    int end_station;
+    int end_station = 2;
     //Array med de stationer vi skal tjekke
-    int visited[length] = {1,1,1,1,1,1,1}; //on/off Kan forbedres, maybe
+    int not_visited[length] = {1,1,1,1,1,1,1}; //on/off Kan forbedres, maybe
     double dist[100000];//set to infinity (eller MEGET hoejt tal)
     int prev[length];
     int current_station;
     int k = 0;
 
     //make it to a set. example:{0,0}
-    station unvisited[length];
-    unvisited[start_station].station_id = start_station;
-    unvisited[start_station].distance = 0;
+    station stations[length];
+    stations[start_station].station_id = start_station;
+    stations[start_station].distance = 0;
 
-    //Lav et while loop
     for(int i = 0; i < length; i++)
     {
         if(i != start_station)
         {
-            unvisited[i].station_id = i;
-            unvisited[i].distance = INFINITY;
+            stations[i].station_id = i;
+            stations[i].distance = INFINITY;
             printf("%d",i);
         }
     }
-    Find_closest_station(unvisited, &current_station, end_station, visited);
-    Find_neighbours(unvisited, current_station, route_list, visited);
-    visited[current_station] = 0;
+    printf("%f\n",stations[start_station].distance);
+    //Lav et while loop
+    while(1) //virker ikke ordentligt
+    {
+        Find_closest_station(stations, &current_station, not_visited);
+        if(current_station == end_station)
+        {
+            return;// stations[end_station].distance;
+        }
+        if(current_station==-1)
+        {
+            break;
+        }
+        //printf("test");
+        Find_neighbours(stations, current_station, route_list, not_visited);
+        printf("test 2");
+        not_visited[current_station] = 0;
+        //printf("Test 3");
+    }
 
 }
 
-void Find_closest_station(station unvisited[], int *current_station, int end_station, int visited[]){
+void Find_closest_station(station stations[], int *current_station, int not_visited[]){
+
+    int next_next_index=-1;
+    double min_distance=INFINITY;
+
+    for(int i = 0; i < length; i++)
+    {
+        if(not_visited[i] == 1)
+        {
+            if(stations[i].distance<min_distance)
+            {
+                next_next_index = i;
+                min_distance = stations[i].distance;
+            }
+        }
+    }
+
+    *current_station = next_next_index;
+
+    /*
     int safety = 0;
-    for(int i = 0; 1; i++){
-        for(int j = 0; j<length && visited[unvisited[j].station_id] != 0; j++){
-            if(unvisited[j].distance == i){
-                *current_station = unvisited[j].station_id;
-                if(*current_station == end_station)
+    int ending_loop = 0;
+    for(int i = 0; 1; i++){ //infinite loop
+        printf("test 5\n");
+        for(int j = 0; j<length && visited[stations[i].station_id] != 0; j++){
+            printf("test 6\n");
+
+            if(stations[j].distance == i && visited[stations[j].station_id] != 0){ //potential error
+                printf("test 7\n");
+                *current_station = stations[j].station_id;
+                ending_loop = 1;
+                printf("Current:%d\n", *current_station);
+                //Noget skal slutte funktionen
+
+                if(*current_station == end_station) //fungerer ikke
                 {
                     //To be decided
+                    //print ruten eller kald en funktion der printer ruten
+                    printf("Du har fundet slutstationen");
                 }
                 break;
             }
         }
-        if(unvisited[i].distance == INFINITY || visited[unvisited[i].station_id] == 0){
+        if(stations[i].distance == INFINITY || visited[stations[i].station_id] == 0){
             safety++;
         }
         if(safety == length){
-            break;
+            printf("Der er ikke nogle reachable stationer");
+            *current_station = -1;
+            return;
             //Skal aendres til at lukke hele programmet, og printe noget
         }
-    }
-
+        if(ending_loop == 1)
+        {
+            break;
+        }
+    }*/
 }
 
-void Find_neighbours(station unvisited[], int current_station, route route_list[], int visited[])
+void Find_neighbours(station stations[], int current_station, route route_list[], int visited[])
 {
-    for(int i = 0; i<length && visited[unvisited[i].station_id] != 0; i++)
+    for(int i = 0; i<length ; i++)
     {
-        if(current_station == route_list[i].a)
+        route current_route = route_list[i];
+        int other_station;
+        if(current_route.a==current_station)
         {
-            //unvisited[i].station_id = route_list[i].b;
-            if(route_list[i].cost + unvisited[current_station].distance < unvisited[i].distance)
-            {
-                unvisited[route_list[i].b].distance = route_list[i].cost + unvisited[current_station].distance;
-            }
+            other_station = current_route.b;
         }
-        if(current_station == route_list[i].b)
+        else if(current_route.b==current_station)
         {
-            //unvisited[i].station_id = route_list[i].a;
-            if(route_list[i].cost + unvisited[current_station].distance < unvisited[i].distance)
-            {
-                unvisited[route_list[i].a].distance = route_list[i].cost + unvisited[current_station].distance;
-            }
+            other_station = current_route.a;
+        }else
+        {
+            continue;
+        }
+
+
+        double new_distance = current_route.cost + stations[current_station].distance;
+        //unvisited[i].station_id = route_list[i].b;
+        if(new_distance < stations[other_station].distance){
+            stations[other_station].distance =new_distance;
+            printf("Nabo:%f\n",stations[other_station].distance); //Koerer en gang
         }
     }
-
-
 }
 
 
