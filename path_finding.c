@@ -5,6 +5,7 @@
 
 #define length 7
 
+//Skal hentes fra structs.h i stedet
 struct route{
     int a;
     int b;
