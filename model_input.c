@@ -12,14 +12,6 @@ void read_stations(Station* station, int* num_stations);
 void print_station(Station station);
 void read_connections(Connection* connection, int* num_connections, Station* station, int num_stations);
 
-void read_and_check_char(FILE * stream, char expected) {
-    char next;
-    fscanf(stream, "%c", &next);
-    if(next != expected) {
-        exit(EXIT_FAILURE);
-    }
-}
-
 ModelData get_model_data(void) {
 
         ModelData result;
@@ -100,7 +92,6 @@ void print_station(Station station)
 {
     printf("Name of station: %s\n", station.name);
 }
-
 
 void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations)
 {
