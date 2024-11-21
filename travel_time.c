@@ -2,29 +2,6 @@
 #include <math.h>
 #include "travel_time.h"
 #include "structs.h"
-#include "structs.h"
-/****************DEFINED CONSTANTS***************/
-
-#define MAX_SPEED_1 50    //180.0 km/t = 50m/s
-#define MAX_SPEED_2 200.0 // km/t
-
-#define TIME_FACTOR 60.0  // omregner til minut
-
-#define NAME_LENGTH 20  // allokerer 20 pladser i lageret til struct
-
-#define KBH_RING_D  60000  //meters //rejseplan 30 min
-#define RING_OD_D   102.0     //motorvejslængde fra google maps //rejseplan 45 min
-#define OD_KOLD_D   68.0
-#define KOLD_PAD_D  85.0
-#define PAD_SCHL_D  47.0
-#define SCHL_HAM_D  130.0
-
-#define ACCELERATION 0.5 //1.2
-#define DECELERATION 0.4 //1.1
-#define START_SPEED 60
-#define END_SPEED 0
-/*----------------------------------------------------*/
-
 
 /*-------------------PROTOTYPES-----------------------*/
 double acceleration_time_calculator(double start_or_end_speed, double cruise_speed, double acceleration);
@@ -74,8 +51,6 @@ double acceleration_time_calculator(double start_or_end_speed, double cruise_spe
     if (acceleration_time < 0) {
         //hvis det regnes deceleration vil det give en negativ værdi, så vi ganger det med -1
         acceleration_time *= -1;
-        printf("i if statement : %lf\n", acceleration_time);
-
         return acceleration_time;
     }
 
