@@ -11,9 +11,12 @@ void read_trains(Train* trains, int* num_trains);
 void read_stations(Station* station, int* num_stations);
 void print_station(Station station);
 void read_connections(Connection* connection, int* num_connections, Station* station, int num_stations);
+double km_til_meter(double km);
+double kmt_til_ms(double kmt);
+
 
 ModelData get_model_data(void) {
-
+        double km, meter, kmt, ms;
         ModelData result;
 
         int num_trains;
@@ -107,7 +110,7 @@ void read_connections(Connection* connections, int* num_connections, Station* st
     double track_length;
     double max_speed;
 
-    while (fscanf(file, "%[^;];%[^;];%lf;%lf\n",from_station, to_station, &track_length, &max_speed)==4)
+    while (fscanf(file, "%[^;];%[^;];%lf;%lf\n",from_station, to_station, &max_speed, &track_length)==4)
     {
         int found_start = 0, found_stop = 0;
         for (int j = 0; j < num_stations; j++)
@@ -125,6 +128,8 @@ void read_connections(Connection* connections, int* num_connections, Station* st
             }
 
         }
+        track_length = km_til_meter(track_length);
+        max_speed = kmt_til_ms(max_speed);
 
         connections->distance=track_length;
         connections->max_speed=max_speed;
@@ -143,4 +148,18 @@ void read_connections(Connection* connections, int* num_connections, Station* st
     }
     fclose(file);
 
+}
+
+double km_til_meter(double km)
+{
+    double meter = 1000 * km;
+
+    return meter;
+}
+
+double kmt_til_ms(double kmt)
+{
+    double ms = kmt/3.6;
+
+    return ms;
 }
