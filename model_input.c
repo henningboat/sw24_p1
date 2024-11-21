@@ -5,36 +5,33 @@
 #include <stdlib.h>
 #define MAX_STR_LEN 10000
 
-Train read_train(char* str);
 void print_train(Train train);
 void string_split(char* text, char** sub_str, char a);
-char* read_file(char* path);
 void read_trains(Train* trains, int* num_trains);
-Station read_station(char* str, int index);
 void read_stations(Station* station, int* num_stations);
 void print_station(Station station);
-Connection read_connection(char* str, Station* stations, int num_stations);
-
-
 void read_connections(Connection* connection, int* num_connections, Station* station, int num_stations);
+double km_til_meter(double km);
+double kmt_til_ms(double kmt);
+
 
 ModelData get_model_data(void) {
-
+        double km, meter, kmt, ms;
         ModelData result;
 
         int num_trains;
-        Train* trains= malloc(1000);
+        Train* trains= malloc(100*sizeof(Train));
         read_trains(trains, &num_trains);
         result.trains = trains;
         result.num_trains = num_trains;
 
-        Station* stations = malloc(1000);
+        Station* stations = malloc(100*sizeof(Station));
         int num_stations;
         read_stations(stations, &num_stations);
         result.stations = stations;
         result.num_stations = num_stations;
 
-        Connection* connections = malloc(10000);
+        Connection* connections = malloc(100*sizeof(Connection));
         int num_connections;
         read_connections(connections, &num_connections, stations, num_stations);
         result.connections = connections;
@@ -51,46 +48,7 @@ ModelData get_model_data(void) {
         printf("\n");
     }
 
-
     return result;
-}
-
-void string_split(char* text, char** sub_str, char a)
-{
-    int i = 0;
-    sub_str[0] = text;
-    int sub_str_index = 1;
-
-    while (1)
-    {
-        if (text[i] == '\0')
-        {
-            break;
-        }
-        if (text[i] == a)
-        {
-            text[i] = '\0';
-
-            sub_str[sub_str_index] = text + i + 1;
-            sub_str_index++;
-        }
-        i++;
-    }
-    sub_str[sub_str_index] = NULL;
-}
-
-Train read_train(char* str)
-{
-    char* sub_str[100];
-    string_split(str, sub_str,';');
-    Train train;
-    train.name=(sub_str[0]);
-    train.max_speed=atof(sub_str[1]);
-    train.acceleration=atof(sub_str[2]);
-    train.deceleration=atof(sub_str[3]);
-
-
-    return train;
 }
 
 void print_train(Train train)
@@ -99,85 +57,38 @@ void print_train(Train train)
         train.name, train.max_speed, train.acceleration, train.deceleration);
 }
 
-char* read_file(char* path)
-{
-    FILE *input_file_pointer;
-    char* str = malloc(MAX_STR_LEN);
-    int ch;
-    int i = 0;
-
-    input_file_pointer = fopen(path, "r");
-
-    if (input_file_pointer != NULL){        /* File could be opened */
-        while ((ch = fgetc(input_file_pointer)) != EOF){
-            str[i] = ch;
-            i++;
-        }
-        str[i] = '\0';
-
-        printf("Read from file:\n %s\n", str);
-        printf("\n");
-
-        fclose(input_file_pointer);
-    }
-
-    else{
-        printf("Could not open input file. Bye.");
-        exit(EXIT_FAILURE);
-    }
-
-    return str;
-}
-
 void read_trains(Train* trains, int* num_trains) {
 
-    char* sub_str[1000];
-    int i=0;
-    char* str = read_file("model_data/trains.txt");
-    string_split(str,sub_str,'\n');
+    FILE *file;
+    file = fopen("model_data/trains.txt", "r");
 
-    while (1)
-    {
-        trains[i] = read_train(sub_str[i]);
-        i++;
-        if(sub_str[i]==NULL)
-        {
-            break;
-        }
+    if(file==NULL) {
+        exit(EXIT_FAILURE);
     }
-
-    *num_trains = i;
+    while(fscanf(file, "%[^;];%lf;%lf;%lf\n", trains->name, &trains->max_speed, &trains->acceleration, &trains->deceleration)==4) {
+        (*num_trains)++;
+        trains++;
+    }
+    fclose(file);
 }
 
 void read_stations(Station* station, int* num_stations)
 {
-    char* sub_str[1000];
-    int i=0;
-    char* str = read_file("model_data/Stations.txt");
-    string_split(str,sub_str,'\n');
+    FILE *file;
+    file = fopen("model_data/stations.txt", "r");
 
-    while (1)
-    {
-        station[i] = read_station(sub_str[i], i);
-        i++;
-        if(sub_str[i]==NULL)
-        {
-            break;
-        }
+    if(file==NULL) {
+        exit(EXIT_FAILURE);
     }
 
-    *num_stations = i;
-}
+    while(fscanf(file, "%[^\n]\n", station->name)==1) {
+        station->index=*num_stations;
 
-Station read_station(char* str, int index)
-{
-    char* sub_str[100];
-    string_split(str, sub_str,';');
-    Station station;
-    station.name=(sub_str[0]);
-    station.index=index;
+        (*num_stations)++;
+        station++;
+    }
 
-    return station;
+    fclose(file);
 }
 
 void print_station(Station station)
@@ -185,46 +96,70 @@ void print_station(Station station)
     printf("Name of station: %s\n", station.name);
 }
 
-Connection read_connection(char* str, Station* stations, int num_stations)
+void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations)
 {
-    char* sub_str[100];
-    string_split(str, sub_str,';');
-    Connection connection;
+    FILE *file;
+    file = fopen("model_data/connections.txt", "r");
 
-    for (int j = 0; j < num_stations; j++)
-    {
-        if (strcmp(sub_str[0], stations[j].name) == 0)
-        {    connection.station_a_index= j;
-            printf("station %s is equal to index number %d\n", stations[j].name, j);
-        }
-
-        if (strcmp(sub_str[1], stations[j].name) == 0)
-        {   connection.station_b_index = j;
-            printf("station %s is equal to index number %d\n", stations[j].name, j);
-        }
-
+    if(file==NULL) {
+        exit(EXIT_FAILURE);
     }
 
-    connection.distance=atof(sub_str[2]);
-    connection.max_speed=atof(sub_str[3]);
-    return connection;
+    char from_station[100];
+    char to_station[100];
+    double track_length;
+    double max_speed;
+
+    while (fscanf(file, "%[^;];%[^;];%lf;%lf\n",from_station, to_station, &max_speed, &track_length)==4)
+    {
+        int found_start = 0, found_stop = 0;
+        for (int j = 0; j < num_stations; j++)
+        {
+            if (strcmp(from_station, stations[j].name) == 0)
+            {    connections->station_a_index= j;
+                printf("station %s is equal to index number %d\n", stations[j].name, j);
+                found_start=1;
+            }
+
+            if (strcmp(to_station, stations[j].name) == 0)
+            {   connections->station_b_index = j;
+                printf("station %s is equal to index number %d\n", stations[j].name, j);
+                found_stop=1;
+            }
+
+        }
+        track_length = km_til_meter(track_length);
+        max_speed = kmt_til_ms(max_speed);
+
+        connections->distance=track_length;
+        connections->max_speed=max_speed;
+
+        if(!found_start) {
+            printf("Could not find start station %s when reading connection. Make sure the station is present in stations.txt.", from_station);
+            exit(EXIT_FAILURE);
+        }
+        if(!found_stop) {
+            printf("Could not find end station %s when reading connection. Make sure the station is present in stations.txt.", to_station);
+            exit(EXIT_FAILURE);
+        }
+
+        (*num_connections)++;
+        connections++;
+    }
+    fclose(file);
+
 }
 
-void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations)
-{char* sub_str[1000];
-    int i=0;
-    char* str = read_file("model_data/connections.txt");
-    string_split(str,sub_str,'\n');
+double km_til_meter(double km)
+{
+    double meter = 1000 * km;
 
-    while (1)
-    {
-        connections[i] = read_connection(sub_str[i], stations, num_stations);
-        i++;
-        if(sub_str[i]==NULL)
-        {
-            break;
-        }
-    }
+    return meter;
+}
 
-    *num_connections = i;
+double kmt_til_ms(double kmt)
+{
+    double ms = kmt/3.6;
+
+    return ms;
 }

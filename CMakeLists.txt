@@ -7,7 +7,8 @@ set(CMAKE_C_STANDARD 11)
          model_input.c
          model_input.h
          path_finding.c
-         path_finding.h)
+         path_finding.h
+         travel_time.c)
 
 add_custom_target(copy_model_data ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory

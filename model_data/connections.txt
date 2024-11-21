@@ -1,1 +1,18 @@
-Hamborg;Ringsted;300;200
+Copenhagen S;Koege;200;30.7
+Koege;Ringsted;200;26
+Ringsted;Slagelse;180;29
+Slagelse;Korsoer;180;15
+Korsoer;Nyborg;180;23
+Nyborg;Odense;180;29
+Odense;Middelfart;180;49.5
+Middelfart;Kolding;160;23
+Kolding;Vojens;160;39
+Vojens;Tingslev;180;36
+Tingslev;Padborg;120;14.5
+Padborg;Outside Flensburg;100;9.6
+Outside Flensburg;Schleswig;160;32.8
+Schleswig;Rendsburg;160;24.6
+Rendsburg;Rendsburg Bridge;80;8.1
+Rendsburg Bridge;Neumuenster;160;30.9
+Neumuenster;Hamburg D;160;72
+Hamburg D;Hamburg C;60;5.8
