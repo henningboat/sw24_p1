@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 
+//Skal være ændres så length er baseret på listen af stationer
 #define length 7
 
 //Skal hentes fra structs.h i stedet
