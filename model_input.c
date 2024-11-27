@@ -65,8 +65,10 @@ void read_trains(Train* trains, int* num_trains) {
     if(file==NULL) {
         exit(EXIT_FAILURE);
     }
-    while(fscanf(file, "%[^;];%lf;%lf;%lf\n", trains->name, &trains->max_speed, &trains->acceleration, &trains->deceleration)==4) {
+    double train_speed_kmh;
+    while(fscanf(file, "%[^;];%lf;%lf;%lf\n", trains->name, &train_speed_kmh, &trains->acceleration, &trains->deceleration)==4) {
         (*num_trains)++;
+        trains->max_speed=kmt_til_ms(train_speed_kmh);
         trains++;
     }
     fclose(file);

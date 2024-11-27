@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "travel_time.h"
+
 
 typedef struct route route;
 int find_lowest_cost_station(const double* cost, const int* not_visited, const ModelData*model_data);
@@ -94,8 +96,12 @@ void assign_cost_to_neighbours(const ModelData*model_data, int current_station_i
             continue;
         }
 
+        double current_route_travel_time = get_travel_time(&model_data->trains[0],&current_connection, 0,0);
+
+        printf("%s to %s: %lf minutes\n",model_data->stations[current_station_index].name, model_data->stations[other_station_index].name,current_route_travel_time/60);
+
         //ACHTUNG! TODO: actually calculate time instead of distance
-        double new_cost = current_connection.distance + cost[current_station_index];
+        double new_cost = current_route_travel_time + cost[current_station_index];
         if(new_cost < cost[other_station_index]){
             cost[other_station_index] = new_cost;
            // printf("Nabo:%f\n",stations[other_station_index].distance); //Koerer en gang
