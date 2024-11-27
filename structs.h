@@ -30,7 +30,7 @@ typedef struct
     const Station* stations;
     int num_stations;
     const Connection* connections;
-    int num_connections;
+    int connections_count;
 }ModelData;
 
 #endif

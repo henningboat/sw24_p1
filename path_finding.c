@@ -3,111 +3,102 @@
 #include <math.h>
 #include <stdlib.h>
 
-//Skal være ændres så length er baseret på listen af stationer
-#define length 7
-
-//Skal hentes fra structs.h i stedet
-struct route{
-    int a;
-    int b;
-    int cost;
-};
 
 typedef struct route route;
+int find_lowest_cost_station(const double* cost, const int* not_visited, const ModelData*model_data);
+void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost);
 
-struct station
-{
-    int station_id;
-    double distance;
-};
 
-typedef struct station station;
-
-void Find_closest_station(station stations[], int *current_station, int not_visited[]);
-
-void Find_neighbours(station stations[], int current_station, route route_list[], int visited[]);
-
-void Dijkstra(){
+double get_total_travel_time(const Station *start, const Station *destination, const ModelData *model_data) {
     //Placeholder ruter (de rigtige skal hentes fra Henning/Joseph)
-    route route_list[length] = {{1,2, 2},{2,3, 2},{0,1, 2},{5,6, 2},{3,4, 2},{6,7, 2},{4,5, 2}};
-    int start_station = 0;
-    int end_station = 2;
+
+    int start_station_index = start->index;
+    int end_station = destination->index;
     //Array med de stationer vi skal tjekke
-    int not_visited[length] = {1,1,1,1,1,1,1};
-    int current_station;
+    int* not_visited = malloc(sizeof(int)*model_data->num_stations);
+    for (int i=0;i<model_data->num_stations;i++) {
+        not_visited[i]=1;
+    }
 
-    station stations[length];
-    stations[start_station].station_id = start_station;
-    stations[start_station].distance = 0;
+    double* cost = malloc(sizeof(double)*model_data->num_stations);
 
-    for(int i = 0; i < length; i++)
+    for(int i = 0; i < model_data->num_stations; i++)
     {
-        if(i != start_station)
+        if(i == start_station_index)
         {
-            stations[i].station_id = i;
-            stations[i].distance = INFINITY;
-            printf("%d",i);
+            cost[i] = 0;
+        }else {
+            cost[i] = INFINITY;
+            //printf("%d",i);
         }
     }
-    printf("%f\n",stations[start_station].distance);
+    //printf("%f\n",stations[start_station_index].distance);
     while(1)
     {
-        Find_closest_station(stations, &current_station, not_visited);
-        if(current_station == end_station)
+        int current_station_index = find_lowest_cost_station(cost, not_visited, model_data);
+        if(current_station_index == end_station)
         {
-            return;// stations[end_station].distance;
+            double result = cost[current_station_index];
+            free(not_visited);
+            free(cost);
+            return result;// stations[end_station].distance;
         }
-        if(current_station==-1)
+        if(current_station_index==-1)
         {
-            break;
+            printf("Path finding could not reach end station. Skibidi");
+            exit(EXIT_FAILURE);
         }
-        Find_neighbours(stations, current_station, route_list, not_visited);
-        not_visited[current_station] = 0;
+        assign_cost_to_neighbours(model_data, current_station_index, not_visited, cost);
+        not_visited[current_station_index] = 0;
     }
-
 }
 
-void Find_closest_station(station stations[], int *current_station, int not_visited[]){
+int find_lowest_cost_station(const double* cost, const int* not_visited, const ModelData*model_data){
 
-    int next_next_index=-1;
-    double min_distance=INFINITY;
+    int lowest_cost_index =- 1;
+    double min_cost = INFINITY;
 
-    for(int i = 0; i < length; i++)
+    for(int i = 0; i < model_data->num_stations; i++)
     {
         if(not_visited[i] == 1)
         {
-            if(stations[i].distance<min_distance)
+            if(cost[i]<min_cost)
             {
-                next_next_index = i;
-                min_distance = stations[i].distance;
+                lowest_cost_index = i;
+                min_cost = cost[i];
             }
         }
     }
-    *current_station = next_next_index;
+    return lowest_cost_index;
 }
 
-void Find_neighbours(station stations[], int current_station, route route_list[], int visited[])
+void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost)
 {
-    for(int i = 0; i<length ; i++)
+    for(int i = 0; i < model_data->connections_count ; i++)
     {
-        route current_route = route_list[i];
-        int other_station;
-        if(current_route.a==current_station)
+        Connection current_connection = model_data->connections[i];
+        int other_station_index;
+        if(current_connection.station_a_index==current_station_index)
         {
-            other_station = current_route.b;
+            other_station_index = current_connection.station_b_index;
         }
-        else if(current_route.b==current_station)
+        else if(current_connection.station_b_index==current_station_index)
         {
-            other_station = current_route.a;
+            other_station_index = current_connection.station_a_index;
         }else
         {
             continue;
         }
 
-        double new_distance = current_route.cost + stations[current_station].distance;
-        if(new_distance < stations[other_station].distance){
-            stations[other_station].distance =new_distance;
-            printf("Nabo:%f\n",stations[other_station].distance); //Koerer en gang
+        if(not_visited[other_station_index]==0) {
+            continue;
+        }
+
+        //ACHTUNG! TODO: actually calculate time instead of distance
+        double new_cost = current_connection.distance + cost[current_station_index];
+        if(new_cost < cost[other_station_index]){
+            cost[other_station_index] = new_cost;
+           // printf("Nabo:%f\n",stations[other_station_index].distance); //Koerer en gang
         }
     }
 }

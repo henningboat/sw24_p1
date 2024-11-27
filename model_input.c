@@ -35,7 +35,7 @@ ModelData get_model_data(void) {
         int num_connections;
         read_connections(connections, &num_connections, stations, num_stations);
         result.connections = connections;
-        result.num_connections = num_connections;
+        result.connections_count = num_connections;
 
         print_train(trains[0]);
         printf("\n");
