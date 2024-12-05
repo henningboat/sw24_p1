@@ -16,4 +16,4 @@ Rendsburg;Rendsburg Bridge;80;8.1;-1
 Rendsburg Bridge;Neumuenster;160;30.9;-1
 Neumuenster;Hamburg D;160;72;-1
 Hamburg D;Hamburg C;60;5.8;-1
-Hamburg C;Copenhagen S;0;0;200
+Hamburg C;Copenhagen S;0;0;100
