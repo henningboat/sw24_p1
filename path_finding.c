@@ -89,7 +89,8 @@ int find_lowest_cost_station(const double* cost, const int* not_visited, const M
     return lowest_cost_index;
 }
 
-void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost, int* previous_station_index, int* reached_by_connection_index, int may_use_flight) {
+void assign_cost_to_neighbours(const ModelData *model_data, int current_station_index, const int *not_visited, double *cost, int *
+                               previous_station_index, int may_use_flight) {
     for(int connection_index = 0; connection_index < model_data->connections_count ; connection_index++)
     {
         Connection current_connection = model_data->connections[connection_index];
