@@ -9,7 +9,9 @@ int main(void) {
     const Station* a = get_station_by_name("Hamburg C", &model_data);
     const Station* b = get_station_by_name("Ringsted", &model_data);
 
-    double result = get_total_travel_time(a,b, &model_data);
+    int may_use_flight = 1;
+
+    double result = get_total_travel_time(a,b, &model_data, may_use_flight);
 
     printf("%lf",result/60);
 
