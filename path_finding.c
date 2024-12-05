@@ -74,8 +74,7 @@ int find_lowest_cost_station(const double* cost, const int* not_visited, const M
     return lowest_cost_index;
 }
 
-void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost)
-{
+void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost) {
     for(int i = 0; i < model_data->connections_count ; i++)
     {
         Connection current_connection = model_data->connections[i];
@@ -96,15 +95,19 @@ void assign_cost_to_neighbours(const ModelData*model_data, int current_station_i
             continue;
         }
 
-        double current_route_travel_time = get_travel_time(&model_data->trains[0],&current_connection, 0,0);
+        double current_route_travel_time;
+        if(current_connection.fixed_time_cost==-1) {
+            current_route_travel_time = get_travel_time(&model_data->trains[0], &current_connection, 0, 0);
 
+        }else {
+            current_route_travel_time=current_connection.fixed_time_cost;
+        }
         printf("%s to %s: %lf minutes\n",model_data->stations[current_station_index].name, model_data->stations[other_station_index].name,current_route_travel_time/60);
 
-        //ACHTUNG! TODO: actually calculate time instead of distance
         double new_cost = current_route_travel_time + cost[current_station_index];
         if(new_cost < cost[other_station_index]){
             cost[other_station_index] = new_cost;
-           // printf("Nabo:%f\n",stations[other_station_index].distance); //Koerer en gang
+            // printf("Nabo:%f\n",stations[other_station_index].distance); //Koerer en gang
         }
     }
 }

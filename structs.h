@@ -21,6 +21,9 @@ typedef struct
     int station_b_index;
     double max_speed;
     double distance;
+    //If this contains a value not equal to -1, we use this value in
+    //path finding instead of calculating the travel time
+    double fixed_time_cost;
 }Connection;
 
 typedef struct

@@ -135,6 +135,7 @@ void read_connections(Connection* connections, int* num_connections, Station* st
 
         connections->distance=track_length;
         connections->max_speed=max_speed;
+        connections->fixed_time_cost=-1;
 
         if(!found_start) {
             printf("Could not find start station %s when reading connection. Make sure the station is present in stations.txt.", from_station);
