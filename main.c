@@ -6,8 +6,8 @@
 int main(void) {
     ModelData model_data = get_model_data();
 
-    const Station* a = &model_data.stations[1];
-    const Station* b= &model_data.stations[5];
+    const Station* a = get_station_by_name("Hamburg C", &model_data);
+    const Station* b = get_station_by_name("Ringsted", &model_data);
 
     double result = get_total_travel_time(a,b, &model_data);
 

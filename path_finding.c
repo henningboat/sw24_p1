@@ -1,6 +1,7 @@
 #include "path_finding.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include "travel_time.h"
@@ -8,7 +9,7 @@
 
 typedef struct route route;
 int find_lowest_cost_station(const double* cost, const int* not_visited, const ModelData*model_data);
-void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost);
+void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost, int* previous_station_index, int* reached_by_connection_index);
 
 
 double get_total_travel_time(const Station *start, const Station *destination, const ModelData *model_data) {
@@ -23,9 +24,13 @@ double get_total_travel_time(const Station *start, const Station *destination, c
     }
 
     double* cost = malloc(sizeof(double)*model_data->num_stations);
+    int* previous = malloc(sizeof(int)*model_data->num_stations);
+    int* reached_by_connection_index = malloc(sizeof(int)*model_data->connections_count);
 
     for(int i = 0; i < model_data->num_stations; i++)
     {
+        previous[i]=-1;
+        reached_by_connection_index[i]=-1;
         if(i == start_station_index)
         {
             cost[i] = 0;
@@ -38,11 +43,31 @@ double get_total_travel_time(const Station *start, const Station *destination, c
     while(1)
     {
         int current_station_index = find_lowest_cost_station(cost, not_visited, model_data);
-        if(current_station_index == end_station)
-        {
+        if(current_station_index == end_station) {
             double result = cost[current_station_index];
             free(not_visited);
             free(cost);
+
+            int used_flight = 0;
+            //print path for debugging
+            while (current_station_index!=-1) {
+                printf("%s  ",model_data->stations[current_station_index].name);
+
+                int used_connection_index = reached_by_connection_index[current_station_index];
+                used_flight |= model_data->connections[used_connection_index].fixed_time_cost > 0;
+
+                current_station_index=previous[current_station_index];
+            }
+
+            if(used_flight) {
+                printf("flight was used\n");
+            }else {
+                printf("Green indoctrination succesfull\n");
+            }
+
+            free(previous);
+            free(reached_by_connection_index);
+
             return result;// stations[end_station].distance;
         }
         if(current_station_index==-1)
@@ -50,7 +75,7 @@ double get_total_travel_time(const Station *start, const Station *destination, c
             printf("Path finding could not reach end station. Skibidi");
             exit(EXIT_FAILURE);
         }
-        assign_cost_to_neighbours(model_data, current_station_index, not_visited, cost);
+        assign_cost_to_neighbours(model_data, current_station_index, not_visited, cost, previous, reached_by_connection_index);
         not_visited[current_station_index] = 0;
     }
 }
@@ -74,10 +99,10 @@ int find_lowest_cost_station(const double* cost, const int* not_visited, const M
     return lowest_cost_index;
 }
 
-void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost) {
-    for(int i = 0; i < model_data->connections_count ; i++)
+void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost, int* previous_station_index, int* reached_by_connection_index) {
+    for(int connection_index = 0; connection_index < model_data->connections_count ; connection_index++)
     {
-        Connection current_connection = model_data->connections[i];
+        Connection current_connection = model_data->connections[connection_index];
         int other_station_index;
         if(current_connection.station_a_index==current_station_index)
         {
@@ -107,6 +132,8 @@ void assign_cost_to_neighbours(const ModelData*model_data, int current_station_i
         double new_cost = current_route_travel_time + cost[current_station_index];
         if(new_cost < cost[other_station_index]){
             cost[other_station_index] = new_cost;
+            previous_station_index[other_station_index] = current_station_index;
+            reached_by_connection_index[other_station_index] = connection_index;
             // printf("Nabo:%f\n",stations[other_station_index].distance); //Koerer en gang
         }
     }
