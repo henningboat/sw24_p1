@@ -20,20 +20,20 @@ ModelData get_model_data(void) {
         double km, meter, kmt, ms;
         ModelData result;
 
-        int num_trains;
+        int num_trains = 0;
         Train* trains= malloc(100*sizeof(Train));
         read_trains(trains, &num_trains);
         result.trains = trains;
         result.num_trains = num_trains;
 
         Station* stations = malloc(100*sizeof(Station));
-        int num_stations;
+        int num_stations = 0;
         read_stations(stations, &num_stations);
         result.stations = stations;
         result.num_stations = num_stations;
 
         Connection* connections = malloc(100*sizeof(Connection));
-        int num_connections;
+        int num_connections = 0;
         read_connections(connections, &num_connections, stations, num_stations);
         result.connections = connections;
         result.connections_count = num_connections;
