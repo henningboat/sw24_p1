@@ -1,20 +1,19 @@
-Ringsted
-Koege
-Copenhagen S
-Slagelse
-Korsoer
-Nyborg
-Odense
-Middelfart
-Kolding
-Vojens
-Tingslev
-Padborg
-Outside Flensburg
-Schleswig
-Rendsburg
-Rendsburg Bridge
-Neumuenster
-Hamburg D
-Hamburg C
-
+Ringsted;36356
+Koege;37096
+Copenhagen S;1378649
+Slagelse;35044
+Korsoer;14418
+Nyborg;17900
+Odense;204795
+Middelfart;16546
+Kolding;61121
+Vojens;7480
+Tingslev;2738
+Padborg;4325
+Outside Flensburg;0
+Schleswig;25542
+Rendsburg;28977
+Rendsburg Bridge;0
+Neumuenster;80185
+Hamburg D;0
+Hamburg C;1946000

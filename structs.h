@@ -13,6 +13,7 @@ typedef struct {
 typedef struct {
     char name[MAX_STRING_LENGTH];
     int index;
+    int population;
 }Station;
 
 typedef struct
@@ -34,6 +35,7 @@ typedef struct
     int num_stations;
     const Connection* connections;
     int connections_count;
+    int total_population;
 }ModelData;
 
 #endif

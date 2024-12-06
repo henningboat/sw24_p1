@@ -13,7 +13,6 @@ void assign_cost_to_neighbours(const ModelData*model_data, int current_station_i
 
 
 double get_total_travel_time(const Station *start, const Station *destination, const ModelData *model_data, int may_use_flights) {
-    //Placeholder ruter (de rigtige skal hentes fra Henning/Joseph)
 
     int start_station_index = start->index;
     int end_station = destination->index;
@@ -48,13 +47,13 @@ double get_total_travel_time(const Station *start, const Station *destination, c
 
             //print path for debugging
             while (current_station_index!=-1) {
-                printf("%s  ",model_data->stations[current_station_index].name);
+             //   printf("%s  ",model_data->stations[current_station_index].name);
 
 
                 current_station_index=previous[current_station_index];
             }
 
-            printf("\n");
+          //  printf("\n");
 
             free(previous);
 
@@ -124,7 +123,7 @@ void assign_cost_to_neighbours(const ModelData *model_data, int current_station_
         }else {
             current_route_travel_time = get_travel_time(&model_data->trains[0], &current_connection, 0, 0);
         }
-        printf("%s to %s: %lf minutes\n",model_data->stations[current_station_index].name, model_data->stations[other_station_index].name,current_route_travel_time/60);
+     //   printf("%s to %s: %lf minutes\n",model_data->stations[current_station_index].name, model_data->stations[other_station_index].name,current_route_travel_time/60);
 
         double new_cost = current_route_travel_time + cost[current_station_index];
         if(new_cost < cost[other_station_index]){

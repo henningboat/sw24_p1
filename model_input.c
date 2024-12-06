@@ -17,37 +17,31 @@ double kmh_to_meters_per_second(double kmt);
 
 
 ModelData get_model_data(void) {
-        double km, meter, kmt, ms;
-        ModelData result;
+    ModelData result;
 
-        int num_trains = 0;
-        Train* trains= malloc(100*sizeof(Train));
-        read_trains(trains, &num_trains);
-        result.trains = trains;
-        result.num_trains = num_trains;
+    int num_trains = 0;
+    Train* trains= malloc(100*sizeof(Train));
+    read_trains(trains, &num_trains);
+    result.trains = trains;
+    result.num_trains = num_trains;
 
-        Station* stations = malloc(100*sizeof(Station));
-        int num_stations = 0;
-        read_stations(stations, &num_stations);
-        result.stations = stations;
-        result.num_stations = num_stations;
+    Station* stations = malloc(100*sizeof(Station));
+    int num_stations = 0;
+    read_stations(stations, &num_stations);
+    result.stations = stations;
+    result.num_stations = num_stations;
 
-        Connection* connections = malloc(100*sizeof(Connection));
-        int num_connections = 0;
-        read_connections(connections, &num_connections, stations, num_stations);
-        result.connections = connections;
-        result.connections_count = num_connections;
-
-        print_train(trains[0]);
-        printf("\n");
-        print_train(trains[1]);
-        printf("\n");
-
-    for (int i=0;i<num_stations;i++)
-    {
-        print_station(stations[i]);
-        printf("\n");
+    result.total_population = 0;
+    for (int i=0;i<result.num_stations;i++) {
+        result.total_population+=result.stations[i].population;
     }
+
+    Connection* connections = malloc(100*sizeof(Connection));
+    int num_connections = 0;
+    read_connections(connections, &num_connections, stations, num_stations);
+    result.connections = connections;
+    result.connections_count = num_connections;
+
 
     return result;
 }
@@ -95,7 +89,7 @@ void read_stations(Station* station, int* num_stations)
         exit(EXIT_FAILURE);
     }
 
-    while(fscanf(file, "%[^\n]\n", station->name)==1) {
+    while(fscanf(file, "%[^;];%d\n", station->name, &station->population)==2) {
         station->index=*num_stations;
 
         (*num_stations)++;
@@ -134,13 +128,13 @@ void read_connections(Connection* connections, int* num_connections, Station* st
         {
             if (strcmp(from_station, stations[j].name) == 0)
             {    connections->station_a_index= j;
-                printf("station %s is equal to index number %d\n", stations[j].name, j);
+                //printf("station %s is equal to index number %d\n", stations[j].name, j);
                 found_start=1;
             }
 
             if (strcmp(to_station, stations[j].name) == 0)
             {   connections->station_b_index = j;
-                printf("station %s is equal to index number %d\n", stations[j].name, j);
+               // printf("station %s is equal to index number %d\n", stations[j].name, j);
                 found_stop=1;
             }
 
