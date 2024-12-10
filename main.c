@@ -5,6 +5,8 @@
 #include "model_input.h"
 #include "path_finding.h"
 
+#define PRINT_ALL 1
+
 const Station *get_random_station(const ModelData *model_data);
 
 unsigned int get_random_number() {
@@ -48,6 +50,8 @@ void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, ModelDat
     do {
         b = get_random_station(model_data);
     } while (a == b);
+    //
+
 
     double without_flights_time = get_total_travel_time(a, b, model_data, 0);
     double with_flights_time = get_total_travel_time(a, b, model_data, 1);
@@ -60,16 +64,14 @@ void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, ModelDat
 }
 
 int main(void) {
-
     srand(time(NULL));
-
 
     ModelData model_data = get_model_data();
 
     int trips_by_train=0;
     int trips_by_plane=0;
 
-    int trip_count = 1000000;
+    int trip_count = 10;
 
     for (int i = 0;i<trip_count;i++) {
         run_passenger_simulation(&trips_by_train, &trips_by_plane, &model_data);

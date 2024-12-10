@@ -1,6 +1,6 @@
-Ringsted;36356
-Koege;37096
 Copenhagen S;1378649
+Koege;37096
+Ringsted;36356
 Slagelse;35044
 Korsoer;14418
 Nyborg;17900

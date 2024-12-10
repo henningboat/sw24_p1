@@ -14,6 +14,9 @@ typedef struct {
     char name[MAX_STRING_LENGTH];
     int index;
     int population;
+    int vehicle_stops_here;
+    double drive_through_speed;
+    int original_station_index;
 }Station;
 
 typedef struct
@@ -29,12 +32,23 @@ typedef struct
 
 typedef struct
 {
+    int station_a_index;
+    int station_b_index;
+    Train train;
+    Connection connection;
+    char train_route_name[MAX_STRING_LENGTH];
+}RouteSegment;
+
+typedef struct
+{
     const Train* trains;
     int num_trains;
     const Station* stations;
     int num_stations;
     const Connection* connections;
     int connections_count;
+    const RouteSegment* route_segments;
+    int route_segment_count;
     int total_population;
 }ModelData;
 
