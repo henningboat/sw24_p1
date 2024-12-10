@@ -14,34 +14,45 @@ void print_station(Station station);
 void read_connections(Connection* connection, int* num_connections, Station* station, int num_stations);
 double km_to_meter(double km);
 double kmh_to_meters_per_second(double kmt);
+void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains);
 
 
 ModelData get_model_data(void) {
     ModelData result;
 
     int num_trains = 0;
-    Train* trains= malloc(100*sizeof(Train));
+    Train* trains= malloc(1000*sizeof(Train));
     read_trains(trains, &num_trains);
     result.trains = trains;
     result.num_trains = num_trains;
 
-    Station* stations = malloc(100*sizeof(Station));
+    Station* stations = malloc(1000*sizeof(Station));
     int num_stations = 0;
     read_stations(stations, &num_stations);
     result.stations = stations;
+
+
+    Connection* connections = malloc(1000*sizeof(Connection));
+    int num_connections = 0;
+    read_connections(connections, &num_connections, stations, num_stations);
+    result.connections = connections;
+    result.connections_count = num_connections;
+
+    RouteSegment* route_segments=malloc(1000*sizeof(RouteSegment));
+    int num_route_segments = 0;
+
+    read_route_segments(route_segments, &num_route_segments,stations, &num_stations, connections, num_connections,trains,num_trains);
+
     result.num_stations = num_stations;
+
 
     result.total_population = 0;
     for (int i=0;i<result.num_stations;i++) {
         result.total_population+=result.stations[i].population;
     }
 
-    Connection* connections = malloc(100*sizeof(Connection));
-    int num_connections = 0;
-    read_connections(connections, &num_connections, stations, num_stations);
-    result.connections = connections;
-    result.connections_count = num_connections;
-
+    result.route_segments=route_segments;
+    result.route_segment_count=num_route_segments;
 
     return result;
 }
@@ -91,6 +102,9 @@ void read_stations(Station* station, int* num_stations)
 
     while(fscanf(file, "%[^;];%d\n", station->name, &station->population)==2) {
         station->index=*num_stations;
+        station->drive_through_speed = 0;
+        station->vehicle_stops_here = 1;
+        station->original_station_index=station -> index;
 
         (*num_stations)++;
         station++;
@@ -106,8 +120,15 @@ void print_station(Station station)
 
 double convert_minutes_to_seconds(double fixed_time_cost_seconds);
 
-void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations)
-{
+void assert(int value, const char* error_message) {
+    if (!value) {
+        printf("assertion failed. Error message: ");
+        printf(error_message);
+        exit(EXIT_FAILURE);
+    }
+}
+
+void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations) {
     FILE *file;
     file = fopen("model_data/connections.txt", "r");
 
@@ -115,8 +136,8 @@ void read_connections(Connection* connections, int* num_connections, Station* st
         exit(EXIT_FAILURE);
     }
 
-    char from_station[100];
-    char to_station[100];
+    char from_station[MAX_STRING_LENGTH];
+    char to_station[MAX_STRING_LENGTH];
     double track_length;
     double max_speed;
     double fixed_time_cost_seconds;
@@ -134,11 +155,11 @@ void read_connections(Connection* connections, int* num_connections, Station* st
 
             if (strcmp(to_station, stations[j].name) == 0)
             {   connections->station_b_index = j;
-               // printf("station %s is equal to index number %d\n", stations[j].name, j);
+                // printf("station %s is equal to index number %d\n", stations[j].name, j);
                 found_stop=1;
             }
-
         }
+
         track_length = km_to_meter(track_length);
         max_speed = kmh_to_meters_per_second(max_speed);
 
@@ -164,7 +185,108 @@ void read_connections(Connection* connections, int* num_connections, Station* st
         connections++;
     }
     fclose(file);
+}
 
+
+Connection find_connection(int station_a_index,int station_b_index,  Connection* connections, int num_connections) {
+    for (int i = 0;i < num_connections;i++) {
+        Connection connection = connections[i];
+
+        if (station_a_index==connection.station_a_index&&station_b_index == connection.station_b_index) {
+            return connection;
+        }
+        if (station_b_index==connection.station_a_index&&station_a_index == connection.station_b_index) {
+            return connection;
+        }
+    }
+
+    assert(0, "Could not find connection");
+}
+
+Station get_station_index(char* station_name, Station* stations, int num_stations) {
+    for (int i=0;i<num_stations;i++) {
+        if (strcmp(stations[i].name, station_name)==0) {
+            return stations[i];
+        }
+    }
+    assert(0,"lol");
+}
+
+void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains) {
+    FILE *file;
+    file = fopen("model_data/train_routes.txt", "r");
+
+    if(file==NULL) {
+        exit(EXIT_FAILURE);
+    }
+
+    int last_char = fgetc(file);
+    while (!feof(file))
+    {
+        char train_route_name[MAX_STRING_LENGTH];
+        char train_model_name[MAX_STRING_LENGTH];
+        fscanf(file,"%[^;];%[^;];", train_route_name, train_model_name);
+      //  printf("route: %s %s. Stations: ", train_route_name, train_model_name);
+
+
+        int train_found = 0;
+        for (int i=0; i<num_trains;i++) {
+            if (strcmp(trains[i].name, train_model_name)==0) {
+                route_segment->train = trains[i];
+                train_found=1;
+            }
+        }
+
+        assert(train_found, "Train was not found");
+        int stops_at_station;
+        char first_station_name[MAX_STRING_LENGTH];
+        fscanf(file, "%[^;];%i;", first_station_name, &stops_at_station);
+
+        assert(stops_at_station, "A train route must stop at it's first station");
+
+        Station from_station = get_station_index(first_station_name, stations, *num_stations);
+
+        while (1) {
+            char to_station_name[MAX_STRING_LENGTH];
+            fscanf(file, "%[^;];%i", to_station_name, &stops_at_station);
+
+            Station to_station = get_station_index(to_station_name, stations, *num_stations);
+
+            Connection connection = find_connection(from_station.original_station_index, to_station.index,connections, num_connections);
+            route_segment->connection = connection;
+
+            if (!stops_at_station) {
+                //If we don't stop at the next station, we create a new "drive through station"
+                int new_station_index = *num_stations;
+
+                char new_station_name[MAX_STR_LEN] = "";
+                strcpy(new_station_name, to_station.name);
+                strcpy(&new_station_name[strlen(to_station.name)], " (Drive Through)");
+
+
+                to_station = (Station){.name="", .index=new_station_index, .population=0,.vehicle_stops_here=0,.drive_through_speed=kmh_to_meters_per_second(120), .original_station_index=to_station.index};
+                strcpy(&to_station.name[0], new_station_name);
+
+                stations[new_station_index]=to_station;
+                (*num_stations)++;
+            }
+
+            route_segment->station_a_index =from_station.index;
+            route_segment->station_b_index = to_station.index;
+
+
+            from_station=to_station;
+
+            (*num_route_segments)++;
+            route_segment++;
+
+            last_char= fgetc(file);
+            if (last_char=='\n' || last_char==EOF) {
+                break;
+            }
+        }
+    }
+    fclose(file);
 }
 
 double km_to_meter(double km)

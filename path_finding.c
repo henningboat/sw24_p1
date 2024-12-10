@@ -6,13 +6,13 @@
 
 #include "travel_time.h"
 
-
 typedef struct route route;
 int find_lowest_cost_station(const double* cost, const int* not_visited, const ModelData*model_data);
-void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost, int* previous_station_index, int may_use_flight);
-
+void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost, int* previous_station_index, int may_use_flight, double* speed_at_station, const Station* stations);
 
 double get_total_travel_time(const Station *start, const Station *destination, const ModelData *model_data, int may_use_flights) {
+
+    printf("Computing journey between %s and %s\n", start->name, destination->name);
 
     int start_station_index = start->index;
     int end_station = destination->index;
@@ -23,11 +23,13 @@ double get_total_travel_time(const Station *start, const Station *destination, c
     }
 
     double* cost = malloc(sizeof(double)*model_data->num_stations);
+    double* speed_at_station = malloc(sizeof(double)*model_data->num_stations);
     int* previous = malloc(sizeof(int)*model_data->num_stations);
 
     for(int i = 0; i < model_data->num_stations; i++)
     {
         previous[i]=-1;
+        speed_at_station[i] = 0;
         if(i == start_station_index)
         {
             cost[i] = 0;
@@ -44,16 +46,16 @@ double get_total_travel_time(const Station *start, const Station *destination, c
             double result = cost[current_station_index];
             free(not_visited);
             free(cost);
+            free(speed_at_station);
 
             //print path for debugging
             while (current_station_index!=-1) {
-             //   printf("%s  ",model_data->stations[current_station_index].name);
-
+                printf("%s time: %.0fmin speed: %.0fm/s\n",model_data->stations[current_station_index].name, cost[current_station_index] / 60, speed_at_station[current_station_index]);
 
                 current_station_index=previous[current_station_index];
             }
 
-          //  printf("\n");
+            printf("\n");
 
             free(previous);
 
@@ -64,7 +66,7 @@ double get_total_travel_time(const Station *start, const Station *destination, c
             printf("Path finding could not reach end station. Skibidi");
             exit(EXIT_FAILURE);
         }
-        assign_cost_to_neighbours(model_data, current_station_index, not_visited, cost, previous, may_use_flights);
+        assign_cost_to_neighbours(model_data, current_station_index, not_visited, cost, previous, may_use_flights, speed_at_station, model_data->stations);
         not_visited[current_station_index] = 0;
     }
 }
@@ -89,18 +91,18 @@ int find_lowest_cost_station(const double* cost, const int* not_visited, const M
 }
 
 void assign_cost_to_neighbours(const ModelData *model_data, int current_station_index, const int *not_visited, double *cost, int *
-                               previous_station_index, int may_use_flight) {
-    for(int connection_index = 0; connection_index < model_data->connections_count ; connection_index++)
+                               previous_station_index, int may_use_flight, double* speed_at_station, const Station* stations) {
+    for(int connection_index = 0; connection_index < model_data->route_segment_count ; connection_index++)
     {
-        Connection current_connection = model_data->connections[connection_index];
+        RouteSegment current_route_segment = model_data->route_segments[connection_index];
         int other_station_index;
-        if(current_connection.station_a_index==current_station_index)
+        if(current_route_segment.station_a_index==current_station_index)
         {
-            other_station_index = current_connection.station_b_index;
+            other_station_index = current_route_segment.station_b_index;
         }
-        else if(current_connection.station_b_index==current_station_index)
+        else if(current_route_segment.station_b_index==current_station_index)
         {
-            other_station_index = current_connection.station_a_index;
+            other_station_index = current_route_segment.station_a_index;
         }else
         {
             continue;
@@ -111,23 +113,30 @@ void assign_cost_to_neighbours(const ModelData *model_data, int current_station_
         }
 
         double current_route_travel_time;
-        int is_flight = current_connection.fixed_time_cost != -1;
+        int is_flight = current_route_segment.connection.fixed_time_cost != -1;
 
         //If
         if(is_flight && !may_use_flight) {
             continue;
         }
 
+        double speed_at_other_station = stations[other_station_index].drive_through_speed;
+
         if(is_flight) {
-            current_route_travel_time=current_connection.fixed_time_cost;
+            current_route_travel_time=current_route_segment.connection.fixed_time_cost;
         }else {
-            current_route_travel_time = get_travel_time(&model_data->trains[0], &current_connection, 0, 0);
+            current_route_travel_time = get_travel_time(&model_data->trains[0], &current_route_segment.connection, speed_at_station[current_station_index], speed_at_other_station);
         }
+
+
+
      //   printf("%s to %s: %lf minutes\n",model_data->stations[current_station_index].name, model_data->stations[other_station_index].name,current_route_travel_time/60);
 
         double new_cost = current_route_travel_time + cost[current_station_index];
         if(new_cost < cost[other_station_index]){
             cost[other_station_index] = new_cost;
+            speed_at_station[other_station_index] = speed_at_other_station;
+
             previous_station_index[other_station_index] = current_station_index;
             // printf("Nabo:%f\n",stations[other_station_index].distance); //Koerer en gang
         }
