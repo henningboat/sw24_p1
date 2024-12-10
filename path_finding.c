@@ -12,11 +12,18 @@ void print_path_finding_results(const ModelData *model_data, double *cost, doubl
 
 
 double get_total_travel_time(const Station *start, const Station *destination, const ModelData *model_data, int may_use_flights) {
-
-    printf("Computing journey between %s and %s\n", start->name, destination->name);
+#ifdef DEBUG_PRINT
+    printf("PATH FINDING:\t\tComputing journey between %s and %s", start->name, destination->name);
+    if (may_use_flights) {
+        printf(" with planes.\n");
+    }else {
+        printf(" without planes.\n");
+    }
+#endif
 
     int start_station_index = start->index;
     int end_station = destination->index;
+
     //Array med de stationer vi skal tjekke
     int* not_visited = malloc(sizeof(int)*model_data->num_stations);
     for (int i=0;i<model_data->num_stations;i++) {
@@ -46,7 +53,9 @@ double get_total_travel_time(const Station *start, const Station *destination, c
         if(current_station_index == end_station) {
             double result = cost[current_station_index];
 
+#ifdef DEBUG_PRINT
             print_path_finding_results(model_data, cost, speed_at_station, previous, &current_station_index);
+#endif
 
             free(not_visited);
             free(cost);
@@ -140,8 +149,7 @@ void assign_cost_to_neighbours(const ModelData *model_data, int current_station_
 void print_path_finding_results(const ModelData *model_data, double *cost, double *speed_at_station, int *previous, int *current_station_index) {
     //print path for debugging
     while (*current_station_index!=-1) {
-        printf("%s time: %.0fmin speed: %.0fm/s\n",model_data->stations[(*current_station_index)].name, cost[(*current_station_index)] / 60, speed_at_station[(*current_station_index)]);
-
+        printf("PATH FINDING:\t\t%s time: %.0fmin speed: %.0fm/s\n",model_data->stations[(*current_station_index)].name, cost[(*current_station_index)] / 60, speed_at_station[(*current_station_index)]);
         *current_station_index=previous[(*current_station_index)];
     }
 

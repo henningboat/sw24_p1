@@ -1,0 +1,7 @@
+﻿Lyntog-Copenhagen-Hamburg Via Jylland;Talgo;Copenhagen S;1;Koege;0;Ringsted;1;Slagelse;0;Korsoer;0;Nyborg;0;Odense;1;Middelfart;0;Kolding;0;Vojens;0;Tingslev;0;Padborg;0;Outside Flensburg;0;Schleswig;1;Rendsburg;0;Rendsburg Bridge;0;Neumuenster;0;Hamburg D;0;Hamburg C;1
+RegionalTrain-Copenhagen-Odense;Regionaltog;Copenhagen S;1;Koege;1;Ringsted;1;Slagelse;1;Korsoer;1;Nyborg;1;Odense;1
+Regional-Train-Odense-Kolding;Regionaltog;Odense;1;Middelfart;1;Kolding;1
+Regional-Train-Kolding-Flensburg;Regionaltog;Kolding;1;Vojens;1;Tingslev;1;Padborg;1;Outside Flensburg;0;Schleswig;1;Rendsburg;1;Rendsburg Bridge;0;Neumuenster;1;Hamburg D;1;Hamburg C;1
+Copenhagen-Hamburg-Plane;Talgo;Copenhagen S;1;Hamburg C;1
+RegionalTrain-Hamburg-Luebeck;Talgo;Hamburg C;1;Ahrensburg;1;Bargteheide;1;Bad Oldesloe;1;Reinfeld;1;Outside Luebeck;0;Luebeck;1
+RegionalTrain-Nykoebing-Ringsted;Regionaltog;Nykoebing Falster;1;Vordingborg;1;Naestved;1;Ringsted;1;Koege;1;Copenhagen S;1

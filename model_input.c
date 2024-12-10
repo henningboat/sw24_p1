@@ -5,43 +5,57 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MAX_STR_LEN 10000
 
 void print_train(Train train);
-void read_trains(Train* trains, int* num_trains);
-void read_stations(Station* station, int* num_stations);
+void read_trains(Train* trains, int* num_trains,char model_data_path[500]);
+void read_stations(Station* station, int* num_stations,char model_data_path[500]);
 void print_station(Station station);
-void read_connections(Connection* connection, int* num_connections, Station* station, int num_stations);
+void read_connections(Connection* connection, int* num_connections, Station* station, int num_stations,char model_data_path[500]);
 double km_to_meter(double km);
 double kmh_to_meters_per_second(double kmt);
-void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains);
+void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains,char model_data_path[500]);
+
+FILE* open_file(const char* folder_path, const char* file_name) {
+    char file_path[MAX_STRING_LENGTH];
+    strcpy(file_path, folder_path);
+    strcpy(&file_path[strlen(file_path)], file_name);
+
+    FILE *file;
+    file = fopen(file_path, "r");
+
+    if(file==NULL) {
+        printf("Could not open file %s", file_path);
+        exit(EXIT_FAILURE);
+    }
 
 
-ModelData get_model_data(void) {
+    return file;
+}
+
+ModelData get_model_data(char model_data_path[500]) {
     ModelData result;
 
     int num_trains = 0;
     Train* trains= malloc(1000*sizeof(Train));
-    read_trains(trains, &num_trains);
+    read_trains(trains, &num_trains, model_data_path);
     result.trains = trains;
     result.num_trains = num_trains;
 
     Station* stations = malloc(1000*sizeof(Station));
     int num_stations = 0;
-    read_stations(stations, &num_stations);
+    read_stations(stations, &num_stations,model_data_path);
     result.stations = stations;
-
 
     Connection* connections = malloc(1000*sizeof(Connection));
     int num_connections = 0;
-    read_connections(connections, &num_connections, stations, num_stations);
+    read_connections(connections, &num_connections, stations, num_stations,model_data_path);
     result.connections = connections;
     result.connections_count = num_connections;
 
     RouteSegment* route_segments=malloc(1000*sizeof(RouteSegment));
     int num_route_segments = 0;
 
-    read_route_segments(route_segments, &num_route_segments,stations, &num_stations, connections, num_connections,trains,num_trains);
+    read_route_segments(route_segments, &num_route_segments,stations, &num_stations, connections, num_connections,trains,num_trains,model_data_path);
 
     result.num_stations = num_stations;
 
@@ -74,14 +88,11 @@ void print_train(Train train)
         train.name, train.max_speed, train.acceleration, train.deceleration);
 }
 
-void read_trains(Train* trains, int* num_trains) {
+void read_trains(Train* trains, int* num_trains, char model_data_path[500]) {
 
-    FILE *file;
-    file = fopen("model_data/trains.txt", "r");
 
-    if(file==NULL) {
-        exit(EXIT_FAILURE);
-    }
+    FILE *file = open_file(model_data_path, "trains.txt");
+
     double train_speed_kmh;
     while(fscanf(file, "%[^;];%lf;%lf;%lf\n", trains->name, &train_speed_kmh, &trains->acceleration, &trains->deceleration)==4) {
         (*num_trains)++;
@@ -91,14 +102,9 @@ void read_trains(Train* trains, int* num_trains) {
     fclose(file);
 }
 
-void read_stations(Station* station, int* num_stations)
+void read_stations(Station* station, int* num_stations,char model_data_path[500])
 {
-    FILE *file;
-    file = fopen("model_data/stations.txt", "r");
-
-    if(file==NULL) {
-        exit(EXIT_FAILURE);
-    }
+    FILE *file = open_file(model_data_path, "stations.txt");
 
     while(fscanf(file, "%[^;];%d\n", station->name, &station->population)==2) {
         station->index=*num_stations;
@@ -128,13 +134,9 @@ void assert(int value, const char* error_message) {
     }
 }
 
-void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations) {
-    FILE *file;
-    file = fopen("model_data/connections.txt", "r");
+void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations,char model_data_path[500]) {
 
-    if(file==NULL) {
-        exit(EXIT_FAILURE);
-    }
+    FILE *file = open_file(model_data_path, "connections.txt");
 
     char from_station[MAX_STRING_LENGTH];
     char to_station[MAX_STRING_LENGTH];
@@ -212,13 +214,10 @@ Station get_station_index(char* station_name, Station* stations, int num_station
     assert(0,"lol");
 }
 
-void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains) {
-    FILE *file;
-    file = fopen("model_data/train_routes.txt", "r");
+void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains,char *model_data_path) {
 
-    if(file==NULL) {
-        exit(EXIT_FAILURE);
-    }
+    FILE *file = open_file(model_data_path, "train_routes.txt");
+
 
     int last_char = fgetc(file);
     while (!feof(file))
@@ -259,7 +258,7 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
                 //If we don't stop at the next station, we create a new "drive through station"
                 int new_station_index = *num_stations;
 
-                char new_station_name[MAX_STR_LEN] = "";
+                char new_station_name[MAX_STRING_LENGTH] = "";
                 strcpy(new_station_name, to_station.name);
                 strcpy(&new_station_name[strlen(to_station.name)], " (Drive Through)");
 
@@ -288,6 +287,8 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
     }
     fclose(file);
 }
+
+
 
 double km_to_meter(double km)
 {

@@ -1,0 +1,31 @@
+Copenhagen S;Koege;200;30.7;-1
+Koege;Ringsted;200;26;-1
+Ringsted;Slagelse;180;29;-1
+Slagelse;Korsoer;180;15;-1
+Korsoer;Nyborg;180;23;-1
+Nyborg;Odense;180;29;-1
+Odense;Middelfart;180;49.5;-1
+Middelfart;Kolding;160;23;-1
+Kolding;Vojens;160;39;-1
+Vojens;Tingslev;180;36;-1
+Tingslev;Padborg;120;14.5;-1
+Padborg;Outside Flensburg;100;9.6;-1
+Outside Flensburg;Schleswig;160;32.8;-1
+Schleswig;Rendsburg;160;24.6;-1
+Rendsburg;Rendsburg Bridge;80;8.1;-1
+Rendsburg Bridge;Neumuenster;160;30.9;-1
+Neumuenster;Hamburg D;160;72;-1
+Hamburg D;Hamburg C;60;5.8;-1
+Hamburg C;Copenhagen S;0;0;200
+Hamburg C;Ahrensburg;140;21.14;-1
+Ahrensburg;Bargteheide;140;7;-1
+Bargteheide;Bad Oldesloe;140;11.5;-1
+Bad Oldesloe;Reinfeld;140;8.2;-1
+Reinfeld;Outside Luebeck;140;11.3;-1
+Outside Luebeck;Luebeck;60;3.84;-1
+Luebeck;Tunnel South;200;57;-1
+Tunnel South;Tunnel North;200;18;-1
+Tunnel North;Nykoebing Falster;200;36;-1
+Nykoebing Falster;Vordingborg;180;28;-1
+Vordingborg;Naestved;180;27;-1
+Naestved;Ringsted;180;26.7;-1

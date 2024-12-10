@@ -8,7 +8,9 @@ set(CMAKE_C_STANDARD 11)
          model_input.h
          path_finding.c
          path_finding.h
-         travel_time.c)
+         travel_time.c
+         simulation_loop.c
+         simulation_loop.h)
 
 add_custom_target(copy_model_data ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -17,3 +19,4 @@ add_custom_target(copy_model_data ALL
 )
 
 add_dependencies(p1 copy_model_data)
+#add_compile_definitions(DEBUG_PRINT)

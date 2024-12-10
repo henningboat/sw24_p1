@@ -1,7 +1,8 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#define MAX_STRING_LENGTH 100
+#define MAX_STRING_LENGTH 200
+#define PATH_STRING_LENGTH 500
 
 typedef struct {
     char name[MAX_STRING_LENGTH];
