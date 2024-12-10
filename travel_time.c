@@ -1,38 +1,75 @@
 #include <stdio.h>
 #include <math.h>
 #include "travel_time.h"
+
+#include <stdlib.h>
+
 #include "structs.h"
 
 /*-------------------PROTOTYPES-----------------------*/
 double acceleration_time_calculator(double start_or_end_speed, double cruise_speed, double acceleration);
 
-double acceleration_distance_calculator(double start_speed,double end_speed, double acceleration);
+double acceleration_distance_calculator(double start_speed, double end_speed, double acceleration);
 
 double find_max_speed(double train, double connection);
 
+void calculate_time_and_distance_acceleration(double *acceleration_time,
+                                              double *acceleration_distance,
+                                              double *deceleration_time,
+                                              double *deceleration_distance,
+                                              double acceleration,
+                                              double deceleration,
+                                              double start_speed,
+                                              double end_speed,
+                                              double cruise_speed);
+
 /*----------------------------------------------------*/
+
+
+
+
 
 
 /*::::::::::::::::::::::::::::..Functions..::::::::::::::::::::::::::::*/
 
 double get_travel_time(const Train *train, const Connection *connection, double start_speed, double end_speed) {
+    //LOCAL VARIABLES
     double cruise_speed = find_max_speed(train->max_speed, connection->max_speed);
+    double acceleration_time = 0;
+    double deceleration_time = 0;
+    double ac_distance = 0;
+    double dc_distance = 0;
 
-    //de næste to linjer finder accelerations tiden og decelerations tiden, som til cruiseTime
-    double acceleration_time = acceleration_time_calculator(start_speed, cruise_speed, train->acceleration);
-    double deceleration_time = acceleration_time_calculator(end_speed, cruise_speed, train->deceleration);
+    calculate_time_and_distance_acceleration(&acceleration_time,
+                                             &ac_distance,
+                                             &deceleration_time,
+                                             &dc_distance,
+                                             train->acceleration,
+                                             train->deceleration,
+                                             start_speed,
+                                             end_speed,
+                                             cruise_speed);
 
-    //Samme princip finder distancen som bruges i at finde cruiseTime
-    double ac_distance = acceleration_distance_calculator(start_speed,end_speed, train->acceleration);
-    double dc_distance = acceleration_distance_calculator(start_speed,end_speed, train->deceleration);
 
-    /*if(ac_distance+dc_distance>=connection->distance){
-        return acceleration_time+deceleration_time;
-    }*/
+    while (ac_distance + dc_distance > connection->distance) {
+        if(cruise_speed<0.05) {
+        printf("Kaputski i get_travel_time");
+            exit(EXIT_FAILURE);
+        }
+        cruise_speed /= 2.0;
+
+        calculate_time_and_distance_acceleration(&acceleration_time,
+                                                 &ac_distance,
+                                                 &deceleration_time,
+                                                 &dc_distance,
+                                                 train->acceleration,
+                                                 train->deceleration,
+                                                 start_speed,
+                                                 end_speed,
+                                                 cruise_speed);
+    }
 
     double dist = connection->distance - ac_distance - dc_distance;
-
-    //To find the time taken, we need to factor in ac- and deceleration time
     double cruiseTime = dist / cruise_speed;
 
     // adderer acc- og deceleration tiden for at finde korrekte tid
@@ -42,10 +79,31 @@ double get_travel_time(const Train *train, const Connection *connection, double 
     return time;
 }
 
-//Functionen regner distancen af accelerationen fra start til cruise_speed
-double acceleration_distance_calculator(double start_speed,double end_speed, double acceleration) {
 
-    double acceleration_distance = (pow(end_speed,2)-pow(start_speed,2))/(2*acceleration);
+
+
+
+void calculate_time_and_distance_acceleration(double *acceleration_time,
+                                              double *acceleration_distance,
+                                              double *deceleration_time,
+                                              double *deceleration_distance,
+                                              double acceleration,
+                                              double deceleration,
+                                              double start_speed,
+                                              double end_speed,
+                                              double cruise_speed) {
+
+    *acceleration_time = acceleration_time_calculator(start_speed, cruise_speed, acceleration);
+    *deceleration_time = acceleration_time_calculator(end_speed, cruise_speed, deceleration);
+
+    *acceleration_distance = acceleration_distance_calculator(start_speed, cruise_speed, acceleration);
+    *deceleration_distance = acceleration_distance_calculator(end_speed, cruise_speed, acceleration);
+}
+
+
+//Functionen regner distancen af accelerationen fra start til cruise_speed
+double acceleration_distance_calculator(double start_speed, double end_speed, double acceleration) {
+    double acceleration_distance = (pow(end_speed, 2) - pow(start_speed, 2)) / (2 * acceleration);
     return acceleration_distance;
 }
 
