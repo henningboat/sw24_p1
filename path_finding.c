@@ -1,14 +1,15 @@
 #include "path_finding.h"
 #include <stdio.h>
 #include <math.h>
-#include <stdbool.h>
 #include <stdlib.h>
-
 #include "travel_time.h"
+
 
 typedef struct route route;
 int find_lowest_cost_station(const double* cost, const int* not_visited, const ModelData*model_data);
 void assign_cost_to_neighbours(const ModelData*model_data, int current_station_index, const int* not_visited, double* cost, int* previous_station_index, int may_use_flight, double* speed_at_station, const Station* stations);
+void print_path_finding_results(const ModelData *model_data, double *cost, double *speed_at_station, int *previous, int *current_station_index) ;
+
 
 double get_total_travel_time(const Station *start, const Station *destination, const ModelData *model_data, int may_use_flights) {
 
@@ -44,19 +45,12 @@ double get_total_travel_time(const Station *start, const Station *destination, c
         int current_station_index = find_lowest_cost_station(cost, not_visited, model_data);
         if(current_station_index == end_station) {
             double result = cost[current_station_index];
+
+            print_path_finding_results(model_data, cost, speed_at_station, previous, &current_station_index);
+
             free(not_visited);
             free(cost);
             free(speed_at_station);
-
-            //print path for debugging
-            while (current_station_index!=-1) {
-                printf("%s time: %.0fmin speed: %.0fm/s\n",model_data->stations[current_station_index].name, cost[current_station_index] / 60, speed_at_station[current_station_index]);
-
-                current_station_index=previous[current_station_index];
-            }
-
-            printf("\n");
-
             free(previous);
 
             return result;// stations[end_station].distance;
@@ -141,4 +135,15 @@ void assign_cost_to_neighbours(const ModelData *model_data, int current_station_
             // printf("Nabo:%f\n",stations[other_station_index].distance); //Koerer en gang
         }
     }
+}
+
+void print_path_finding_results(const ModelData *model_data, double *cost, double *speed_at_station, int *previous, int *current_station_index) {
+    //print path for debugging
+    while (*current_station_index!=-1) {
+        printf("%s time: %.0fmin speed: %.0fm/s\n",model_data->stations[(*current_station_index)].name, cost[(*current_station_index)] / 60, speed_at_station[(*current_station_index)]);
+
+        *current_station_index=previous[(*current_station_index)];
+    }
+
+    printf("\n");
 }
