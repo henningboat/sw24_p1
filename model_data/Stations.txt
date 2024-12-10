@@ -17,3 +17,14 @@ Rendsburg Bridge;0
 Neumuenster;80185
 Hamburg D;0
 Hamburg C;1946000
+Ahrensburg;35147
+Bargteheide;16320
+Bad Oldesloe;25104
+Reinfeld;9029
+Outside Luebeck;0
+Luebeck;219044
+Tunnel South;0
+Tunnel North;0
+Nykoebing Falster;16927
+Vordingborg;18286
+Naestved;44996

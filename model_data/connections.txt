@@ -16,4 +16,16 @@ Rendsburg;Rendsburg Bridge;80;8.1;-1
 Rendsburg Bridge;Neumuenster;160;30.9;-1
 Neumuenster;Hamburg D;160;72;-1
 Hamburg D;Hamburg C;60;5.8;-1
-Hamburg C;Copenhagen S;0;0;100
+Hamburg C;Copenhagen S;0;0;200
+Hamburg C;Ahrensburg;140;21.14;-1
+Ahrensburg;Bargteheide;140;7;-1
+Bargteheide;Bad Oldesloe;140;11.5;-1
+Bad Oldesloe;Reinfeld;140;8.2;-1
+Reinfeld;Outside Luebeck;140;11.3;-1
+Outside Luebeck;Luebeck;60;3.84;-1
+Luebeck;Tunnel South;200;57;-1
+Tunnel South;Tunnel North;200;18;-1
+Tunnel North;Nykoebing Falster;200;36;-1
+Nykoebing Falster;Vordingborg;180;28;-1
+Vordingborg;Naestved;180;27;-1
+Naestved;Ringsted;180;26.7;-1

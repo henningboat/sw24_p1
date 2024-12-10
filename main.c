@@ -71,7 +71,7 @@ int main(void) {
     int trips_by_train=0;
     int trips_by_plane=0;
 
-    int trip_count = 10;
+    int trip_count = 20;
 
     for (int i = 0;i<trip_count;i++) {
         run_passenger_simulation(&trips_by_train, &trips_by_plane, &model_data);
