@@ -10,7 +10,9 @@ set(CMAKE_C_STANDARD 11)
          path_finding.h
          travel_time.c
          simulation_loop.c
-         simulation_loop.h)
+         simulation_loop.h
+         passenger_decision_making.c
+         passenger_decision_making.h)
 
 add_custom_target(copy_model_data ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory

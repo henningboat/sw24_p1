@@ -1,4 +1,5 @@
 ﻿#include "simulation_loop.h"
+#include "passenger_decision_making.h"
 
 const Station *get_random_station(const ModelData *model_data);
 
@@ -37,28 +38,29 @@ const Station *get_random_station(const ModelData *model_data) {
     exit(EXIT_FAILURE);
 }
 
-void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, ModelData *model_data) {
-    const Station *a = get_random_station(model_data);
-    const Station *b;
+void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, const ModelData *model_data) {
+    const Station *start = get_random_station(model_data);
+    const Station *destination;
     do {
-        b = get_random_station(model_data);
-    } while (a == b);
-    //
+        destination = get_random_station(model_data);
+    } while (start == destination);
+
+    Passenger passenger = generate_passenger();
 
     #ifdef DEBUG_PRINT
     printf("SIMULATION LOOP:\tComparing trips between %s and %s\n", a->name, b->name);
     #endif
 
-    double without_flights_time = get_total_travel_time(a, b, model_data, 0);
-    double with_flights_time = get_total_travel_time(a, b, model_data, 1);
+    double without_flights_time = get_total_travel_time(start, destination, model_data, 0);
+    double with_flights_time = get_total_travel_time(start, destination, model_data, 1);
 
-    if (with_flights_time < without_flights_time) {
-        (*trips_by_plane)++;
+    if (passenger_chooses_train(passenger, without_flights_time, with_flights_time)) {
+        (*trips_by_train)++;
 #ifdef DEBUG_PRINT
         printf("SIMULATION LOOP:\t Plane was faster\n\n");
 #endif
     } else {
-        (*trips_by_train)++;
+        (*trips_by_plane)++;
 #ifdef DEBUG_PRINT
         printf("SIMULATION LOOP:\t Plane was not faster\n\n");
 #endif

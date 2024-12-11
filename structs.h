@@ -42,6 +42,11 @@ typedef struct
 
 typedef struct
 {
+    double train_time_tolerance;
+}Passenger;
+
+typedef struct
+{
     const Train* trains;
     int num_trains;
     const Station* stations;
