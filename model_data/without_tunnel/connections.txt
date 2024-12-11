@@ -16,7 +16,7 @@ Rendsburg;Rendsburg Bridge;80;8.1;-1
 Rendsburg Bridge;Neumuenster;160;30.9;-1
 Neumuenster;Hamburg D;160;72;-1
 Hamburg D;Hamburg C;60;5.8;-1
-Hamburg C;Copenhagen S;0;0;200
+Hamburg C;Copenhagen S;0;0;225
 Hamburg C;Ahrensburg;140;21.14;-1
 Ahrensburg;Bargteheide;140;7;-1
 Bargteheide;Bad Oldesloe;140;11.5;-1
@@ -29,3 +29,13 @@ Tunnel North;Nykoebing Falster;200;36;-1
 Nykoebing Falster;Vordingborg;180;28;-1
 Vordingborg;Naestved;180;27;-1
 Naestved;Ringsted;180;26.7;-1
+Hamburg C;Rothenburg;80;3;-1
+Rothenburg;Allermoehe;160;10;-1
+Allermoehe;Schwarzenbek;200;30;-1
+Schwarzenbek;Ludwigslust;230;78.4;-1
+Ludwigslust;Wittenberg;230;44;-1
+Wittenberg;Outside Spandau;230;110.9;-1
+Outside Spandau;Spandau;140;3;-1
+Spandau;Outside Berlin;160;10.8;-1
+Outside Berlin;Berlin;90;1.7;-1
+Copenhagen S;Berlin;0;0;200

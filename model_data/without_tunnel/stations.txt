@@ -28,3 +28,12 @@ Tunnel North;0
 Nykoebing Falster;16927
 Vordingborg;18286
 Naestved;44996
+Rothenburg;0
+Allermoehe;0
+Schwarzenbek;0
+Ludwigslust;0
+Wittenberg;0
+Outside Spandau;0
+Spandau;0
+Outside Berlin;0
+Berlin;3782202
