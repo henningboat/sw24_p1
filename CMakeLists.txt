@@ -12,7 +12,9 @@ set(CMAKE_C_STANDARD 11)
          simulation_loop.c
          simulation_loop.h
          passenger_decision_making.c
-         passenger_decision_making.h)
+         passenger_decision_making.h
+         trip_generation.c
+         trip_generation.h)
 
 add_custom_target(copy_model_data ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory

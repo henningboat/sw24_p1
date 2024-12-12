@@ -43,6 +43,8 @@ typedef struct
 typedef struct
 {
     double train_time_tolerance;
+    const Station* start;
+    const Station* destination;
 }Passenger;
 
 typedef struct

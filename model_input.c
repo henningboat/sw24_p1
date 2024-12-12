@@ -20,8 +20,7 @@ FILE* open_file(const char* folder_path, const char* file_name) {
     strcpy(file_path, folder_path);
     strcpy(&file_path[strlen(file_path)], file_name);
 
-    FILE *file;
-    file = fopen(file_path, "r");
+    FILE *file = fopen(file_path, "r");
 
     if(file==NULL) {
         printf("Could not open file %s", file_path);
@@ -211,7 +210,7 @@ Station get_station_index(char* station_name, Station* stations, int num_station
             return stations[i];
         }
     }
-    assert(0,"lol");
+    assert(0,"could not get station index");
 }
 
 void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains,char *model_data_path) {
