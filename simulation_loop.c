@@ -6,7 +6,7 @@ void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, const Mo
     Passenger passenger = generate_passenger(model_data);
 
     #ifdef DEBUG_PRINT
-    printf("SIMULATION LOOP:\tComparing trips between %s and %s\n", start->name, destination->name);
+    printf("SIMULATION LOOP:\tComparing trips between %s and %s\n", passenger.start->name, passenger.destination->name);
     #endif
 
     double without_flights_time = get_total_travel_time(passenger.start, passenger.destination, model_data, 0);

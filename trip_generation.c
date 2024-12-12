@@ -1,5 +1,7 @@
 ﻿#include "trip_generation.h"
 
+#include <stdio.h>
+
 const Station *get_random_station(const ModelData *model_data);
 
 unsigned int get_random_number() {
