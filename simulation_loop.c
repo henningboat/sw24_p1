@@ -48,7 +48,7 @@ void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, const Mo
     Passenger passenger = generate_passenger();
 
     #ifdef DEBUG_PRINT
-    printf("SIMULATION LOOP:\tComparing trips between %s and %s\n", a->name, b->name);
+    printf("SIMULATION LOOP:\tComparing trips between %s and %s\n", start->name, destination->name);
     #endif
 
     double without_flights_time = get_total_travel_time(start, destination, model_data, 0);
@@ -81,5 +81,5 @@ void run_simulation(int number_of_trips, const char * model_data_path) {
         run_passenger_simulation(&trips_by_train, &trips_by_plane, &model_data);
     }
 
-    printf("Plane ration: %lf percent (Trips by train: %i  Trips by plane: %i)", ((double)trips_by_plane/(double)number_of_trips) * 100, trips_by_train, trips_by_plane);
+    printf("Plane ratio: %0.1lf percent (Trips by train: %i  Trips by plane: %i)", ((double)trips_by_plane/(double)number_of_trips) * 100, trips_by_train, trips_by_plane);
 }
