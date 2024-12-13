@@ -9,6 +9,5 @@
 #include "path_finding.h"
 
 void run_simulation(int number_of_trips, const char *model_data_path);
-unsigned int get_random_number();
 
 #endif SIMULATION_LOOP_H
