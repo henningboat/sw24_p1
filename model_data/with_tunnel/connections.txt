@@ -38,4 +38,4 @@ Wittenberg;Outside Spandau;230;110.9;-1
 Outside Spandau;Spandau;140;3;-1
 Spandau;Outside Berlin;160;10.8;-1
 Outside Berlin;Berlin;90;1.7;-1
-Copenhagen S;Berlin;0;0;200
+Copenhagen S;Berlin;0;0;195
