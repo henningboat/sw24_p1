@@ -6,6 +6,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <math.h>
+#include "travel_time.h"
+#include "path_finding.h"
+#include "CuTest.h"
+
 void print_train(Train train);
 void read_trains(Train* trains, int* num_trains,char model_data_path[500]);
 void read_stations(Station* station, int* num_stations,char model_data_path[500]);
@@ -306,4 +311,9 @@ double kmh_to_meters_per_second(double kmt)
 double convert_minutes_to_seconds(double seconds) {
     return seconds * 60;
 }
+
+
+
+/*:::::::::::::TEST::::::::::*/
+
 

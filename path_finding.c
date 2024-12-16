@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "travel_time.h"
-
+#include "CuTest.h"
 
 typedef struct route route;
 int find_lowest_cost_station(const double* cost, const int* not_visited, const ModelData*model_data);
@@ -155,3 +155,42 @@ void print_path_finding_results(const ModelData *model_data, double *cost, doubl
 
     printf("\n");
 }
+
+
+/*::::::::::::::::::::::::::TESTING FUNCTIONS::::::::::::::::::::::::::*/
+
+void test_FindLowestCost_AllUnvisited(CuTest *tc) {
+    ModelData dummyModelData = {.num_stations = 5};
+    double cost[] = {INFINITY, 10.0, 15.0, 5.0, INFINITY};
+    int not_visited[] = {1, 1, 1, 1, 1};
+
+
+    int actual = find_lowest_cost_station(cost, not_visited, &dummyModelData);
+    int expected = 3;
+
+    CuAssertIntEquals(tc, expected, actual);
+}
+
+void test_FindLowestCost_OneVisited(CuTest *tc) {
+    ModelData dummyModelData = {.num_stations = 5};
+    double cost[] = {INFINITY, 10.0, 15.0, 5.0, INFINITY};
+    int not_visited[] = {1, 1, 1, 0, 1};
+
+
+    int actual = find_lowest_cost_station(cost, not_visited, &dummyModelData);
+    int expected = 1;
+
+
+    CuAssertIntEquals(tc, expected, actual);
+}
+
+
+
+CuSuite *test_path_GetSuite() {
+    CuSuite *suite = CuSuiteNew();
+    SUITE_ADD_TEST(suite, test_FindLowestCost_AllUnvisited);
+    SUITE_ADD_TEST(suite, test_FindLowestCost_OneVisited);
+    return suite;
+}
+
+
