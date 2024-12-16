@@ -43,8 +43,9 @@ void RunAllTests(void) {
 	printf("%s\n", output->buffer);
 }
 
-
+/*
 int main(void)
 {
 	RunAllTests();
 }
+*/

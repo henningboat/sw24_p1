@@ -1,9 +1,12 @@
 
 #include <stdio.h>
 #include "simulation_loop.h"
+#include "AllTests.h"
 
-/*
 int main(void) {
+
+    RunAllTests();
+
     int number_of_trips;
     char model_data_path[PATH_STRING_LENGTH];
 
@@ -16,4 +19,3 @@ int main(void) {
 
     return 0;
 }
-*/

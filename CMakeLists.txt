@@ -18,7 +18,8 @@ set(CMAKE_C_STANDARD 11)
          AllTests.c
          CuTest.c
          CuTestTest.c
-         AllTests.c)
+         AllTests.c
+         AllTests.h)
 
 add_custom_target(copy_model_data ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
