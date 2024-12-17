@@ -29,3 +29,4 @@ add_custom_target(copy_model_data ALL
 
 add_dependencies(p1 copy_model_data)
 #add_compile_definitions(DEBUG_PRINT)
+add_compile_definitions(RUN_UNIT_TESTS)

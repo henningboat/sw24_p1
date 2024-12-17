@@ -10,6 +10,7 @@
 #include "travel_time.h"
 #include "path_finding.h"
 #include "CuTest.h"
+#include "assert.h"
 
 void print_train(Train train);
 void read_trains(Train* trains, int* num_trains,char model_data_path[500]);
@@ -31,7 +32,6 @@ FILE* open_file(const char* folder_path, const char* file_name) {
         printf("Could not open file %s", file_path);
         exit(EXIT_FAILURE);
     }
-
 
     return file;
 }
@@ -113,7 +113,6 @@ void read_stations(Station* station, int* num_stations,char model_data_path[500]
     while(fscanf(file, "%[^;];%d\n", station->name, &station->population)==2) {
         station->index=*num_stations;
         station->drive_through_speed = 0;
-        station->vehicle_stops_here = 1;
         station->original_station_index=station -> index;
 
         (*num_stations)++;
@@ -129,14 +128,6 @@ void print_station(Station station)
 }
 
 double convert_minutes_to_seconds(double fixed_time_cost_seconds);
-
-void assert(int value, const char* error_message) {
-    if (!value) {
-        printf("assertion failed. Error message: ");
-        printf(error_message);
-        exit(EXIT_FAILURE);
-    }
-}
 
 void read_connections(Connection* connections, int* num_connections, Station* stations, int num_stations,char model_data_path[500]) {
 
@@ -166,6 +157,8 @@ void read_connections(Connection* connections, int* num_connections, Station* st
             }
         }
 
+        assert(found_start && found_stop);
+
         track_length = km_to_meter(track_length);
         max_speed = kmh_to_meters_per_second(max_speed);
 
@@ -176,15 +169,6 @@ void read_connections(Connection* connections, int* num_connections, Station* st
             connections->fixed_time_cost=-1;
         }else {
             connections->fixed_time_cost=convert_minutes_to_seconds(fixed_time_cost_seconds);
-        }
-
-        if(!found_start) {
-            printf("Could not find start station %s when reading connection. Make sure the station is present in stations.txt.", from_station);
-            exit(EXIT_FAILURE);
-        }
-        if(!found_stop) {
-            printf("Could not find end station %s when reading connection. Make sure the station is present in stations.txt.", to_station);
-            exit(EXIT_FAILURE);
         }
 
         (*num_connections)++;
@@ -206,7 +190,8 @@ Connection find_connection(int station_a_index,int station_b_index,  Connection*
         }
     }
 
-    assert(0, "Could not find connection");
+    //we should never be able to reach this point
+    assert(0);
 }
 
 Station get_station_index(char* station_name, Station* stations, int num_stations) {
@@ -215,7 +200,7 @@ Station get_station_index(char* station_name, Station* stations, int num_station
             return stations[i];
         }
     }
-    assert(0,"could not get station index");
+    assert(0);
 }
 
 void read_route_segments(RouteSegment* route_segment, int* num_route_segments, Station* stations, int* num_stations, Connection* connections, int num_connections, Train* trains, int num_trains,char *model_data_path) {
@@ -228,11 +213,12 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
     {
         char train_route_name[MAX_STRING_LENGTH];
         char train_model_name[MAX_STRING_LENGTH];
-        fscanf(file,"%[^;];%[^;];", train_route_name, train_model_name);
-      //  printf("route: %s %s. Stations: ", train_route_name, train_model_name);
+        assert(fscanf(file,"%[^;];%[^;];", train_route_name, train_model_name)==2);
+        //printf("route: %s %s. Stations: ", train_route_name, train_model_name);
 
 
         int train_found = 0;
+
         for (int i=0; i<num_trains;i++) {
             if (strcmp(trains[i].name, train_model_name)==0) {
                 route_segment->train = trains[i];
@@ -240,18 +226,19 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
             }
         }
 
-        assert(train_found, "Train was not found");
+        assert(train_found);
         int stops_at_station;
         char first_station_name[MAX_STRING_LENGTH];
-        fscanf(file, "%[^;];%i;", first_station_name, &stops_at_station);
+        assert(fscanf(file, "%[^;];%i;", first_station_name, &stops_at_station)==2);
 
-        assert(stops_at_station, "A train route must stop at it's first station");
+        //the train must stop at the first station
+        assert(stops_at_station);
 
         Station from_station = get_station_index(first_station_name, stations, *num_stations);
 
         while (1) {
             char to_station_name[MAX_STRING_LENGTH];
-            fscanf(file, "%[^;];%i", to_station_name, &stops_at_station);
+            assert(fscanf(file, "%[^;];%i", to_station_name, &stops_at_station) == 2);
 
             Station to_station = get_station_index(to_station_name, stations, *num_stations);
 
@@ -264,10 +251,10 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
 
                 char new_station_name[MAX_STRING_LENGTH] = "";
                 strcpy(new_station_name, to_station.name);
-                strcpy(&new_station_name[strlen(to_station.name)], " (Drive Through)");
+                strcpy(&new_station_name[strlen(to_station.name)], " (Pass Through)");
 
 
-                to_station = (Station){.name="", .index=new_station_index, .population=0,.vehicle_stops_here=0,.drive_through_speed=kmh_to_meters_per_second(120), .original_station_index=to_station.index};
+                to_station = (Station){.name="", .index=new_station_index, .population=0,.drive_through_speed=kmh_to_meters_per_second(120), .original_station_index=to_station.index};
                 strcpy(&to_station.name[0], new_station_name);
 
                 stations[new_station_index]=to_station;
@@ -276,7 +263,6 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
 
             route_segment->station_a_index =from_station.index;
             route_segment->station_b_index = to_station.index;
-
 
             from_station=to_station;
 

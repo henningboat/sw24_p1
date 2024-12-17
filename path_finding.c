@@ -1,4 +1,6 @@
 #include "path_finding.h"
+
+#include <assert.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -20,6 +22,8 @@ double get_total_travel_time(const Station *start, const Station *destination, c
         printf(" without planes.\n");
     }
 #endif
+
+    assert(start->index!=destination->index);
 
     int start_station_index = start->index;
     int end_station = destination->index;

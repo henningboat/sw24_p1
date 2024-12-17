@@ -2,6 +2,7 @@
 #include <math.h>
 #include "travel_time.h"
 
+#include <assert.h>
 #include <stdlib.h>
 
 #include "structs.h"
@@ -77,7 +78,7 @@ double get_travel_time(const Train *train, const Connection *connection, double 
     // adderer acc- og deceleration tiden for at finde korrekte tid
     double time = acceleration_time + deceleration_time + cruiseTime;
 
-
+    assert(time > 0);
     return time;
 }
 
