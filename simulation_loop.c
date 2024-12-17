@@ -20,7 +20,7 @@ void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, const Mo
     } else {
         (*trips_by_plane)++;
 #ifdef DEBUG_PRINT
-        printf("SIMULATION LOOP:\t Plane was not faster\n\n");
+        printf("SIMULATION LOOP:\t Plane was faster\n\n");
 #endif
     }
 }
