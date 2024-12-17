@@ -12,15 +12,20 @@ void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, const Mo
     double without_flights_time = get_total_travel_time(passenger.start, passenger.destination, model_data, 0);
     double with_flights_time = get_total_travel_time(passenger.start, passenger.destination, model_data, 1);
 
+    #ifdef DEBUG_PRINT
+    printf("SIMULATION LOOP:\t Time without flights: %0.1lf seconds\n", without_flights_time);
+    printf("SIMULATION LOOP:\t Time with flights: %0.1lf seconds\n", with_flights_time);
+    #endif
+
     if (passenger_chooses_train(passenger, without_flights_time, with_flights_time)) {
         (*trips_by_train)++;
 #ifdef DEBUG_PRINT
-        printf("SIMULATION LOOP:\t Train was faster\n\n");
+        printf("SIMULATION LOOP:\t Passenger chose train\n\n");
 #endif
     } else {
         (*trips_by_plane)++;
 #ifdef DEBUG_PRINT
-        printf("SIMULATION LOOP:\t Plane was faster\n\n");
+        printf("SIMULATION LOOP:\t Passenger chose plane\n\n");
 #endif
     }
 }
