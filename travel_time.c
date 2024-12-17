@@ -55,10 +55,8 @@ double get_travel_time(const Train *train, const Connection *connection, double 
 
 
     while (ac_distance + dc_distance > connection->distance) {
-        if(cruise_speed<1.0) {
-        printf("Kaputski i get_travel_time");
-            exit(EXIT_FAILURE);
-        }
+
+        assert(cruise_speed>=1);
         cruise_speed /= 2.0;
 
         calculate_time_and_distance_acceleration(&acceleration_time,
