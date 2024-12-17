@@ -15,7 +15,7 @@ void run_passenger_simulation(int *trips_by_train, int *trips_by_plane, const Mo
     if (passenger_chooses_train(passenger, without_flights_time, with_flights_time)) {
         (*trips_by_train)++;
 #ifdef DEBUG_PRINT
-        printf("SIMULATION LOOP:\t Plane was faster\n\n");
+        printf("SIMULATION LOOP:\t Train was faster\n\n");
 #endif
     } else {
         (*trips_by_plane)++;
