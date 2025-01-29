@@ -132,7 +132,7 @@ void assign_cost_to_neighbours(const ModelData *model_data, int current_station_
         if(is_flight) {
             current_route_travel_time=current_route_segment.connection.fixed_time_cost;
         }else {
-            current_route_travel_time = get_travel_time(&model_data->trains[0], &current_route_segment.connection, speed_at_station[current_station_index], speed_at_other_station);
+            current_route_travel_time = get_travel_time(&current_route_segment.train, &current_route_segment.connection, speed_at_station[current_station_index], speed_at_other_station);
         }
 
 

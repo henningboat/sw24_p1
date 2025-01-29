@@ -218,10 +218,11 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
 
 
         int train_found = 0;
+        Train train;
 
         for (int i=0; i<num_trains;i++) {
             if (strcmp(trains[i].name, train_model_name)==0) {
-                route_segment->train = trains[i];
+                train = trains[i];
                 train_found=1;
             }
         }
@@ -244,6 +245,7 @@ void read_route_segments(RouteSegment* route_segment, int* num_route_segments, S
 
             Connection connection = find_connection(from_station.original_station_index, to_station.index,connections, num_connections);
             route_segment->connection = connection;
+            route_segment->train = train;
 
             if (!stops_at_station) {
                 //If we don't stop at the next station, we create a new "drive through station"
